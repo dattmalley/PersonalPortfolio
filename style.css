@@ -5,6 +5,7 @@
 
 html {
     box-sizing: border-box;
+    scroll-behavior: smooth;
 }
 
 body {
@@ -14,11 +15,26 @@ font-family: Kanit, sans-serif;
 #navbar {
     display: flex;
     justify-content: flex-end;
+    position: fixed;
+    width: 100%;
+    background-color: cornflowerblue;
 }
 
 .navlist {
     display: flex;
     list-style-type: none;
+}
+
+.navlist a {
+    font-size: 1.5em;
+    padding: 1em;
+    text-decoration: none;
+    transition: transform 0.3s ease-out;
+}
+
+.navlist a:hover {
+    transform: translateY(-5px);
+    background-color: chartreuse;
 }
 
 #welcome-section {
@@ -36,6 +52,34 @@ font-family: Kanit, sans-serif;
     flex-wrap: wrap;
 }
 
+.project-tile {
+    text-decoration: none;
+}
+
 figure {
     margin: 1rem;
+}
+
+figcaption {
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+#profile-link {
+    
+}
+
+@media (max-width: 980px) {
+    html {
+        font-size: 75%;
+    }
+}
+
+@media (max-width: 460px) {
+    html {
+        font-size: 50%;
+    }
 }
