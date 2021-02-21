@@ -50,6 +50,7 @@ font-family: Kanit, sans-serif;
 .projects-grid {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .project-tile {
@@ -62,10 +63,23 @@ figure {
 
 figcaption {
     text-align: center;
+    font-size: 36px;
+    background-color: cornflowerblue;
+    margin-top: -20px;
 }
 
 a {
     text-decoration: none;
+}
+
+#contact {
+    display: flex;
+    justify-content: center;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
 }
 
 #profile-link {
