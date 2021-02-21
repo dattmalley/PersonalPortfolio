@@ -72,18 +72,38 @@ a {
     text-decoration: none;
 }
 
+.contact-section-header, h2{
+    font-size: 3rem;
+}
+
+.contact-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 35vh;
+
+}
+
 #contact {
     display: flex;
     justify-content: center;
 }
 
+contact-links {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+
+}
+
+
+
 footer {
     display: flex;
     justify-content: center;
-}
-
-#profile-link {
-    
 }
 
 @media (max-width: 980px) {
