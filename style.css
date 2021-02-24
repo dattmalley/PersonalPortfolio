@@ -8,6 +8,14 @@ html {
     scroll-behavior: smooth;
 }
 
+h1 {
+    font-size: 36px;
+}
+
+p {
+     font-size: 24px;
+}
+
 body {
 font-family: Kanit, sans-serif;
 }
@@ -74,19 +82,27 @@ font-family: Kanit, sans-serif;
     text-decoration: none;
 }
 
+.mural {
+    margin-top: 75px;
+    margin-bottom: 57px;
+}
+
 figure {
     margin: 1rem;
 }
 
 figcaption {
     text-align: center;
-    font-size: 36px;
+    font-size: 24px;
     background-color: cornflowerblue;
-    margin-top: -20px;
+    margin-top: -10px;
+    color: black;
 }
 
 a {
     text-decoration: none;
+    font-size: 22px;
+    color: black;
 }
 
 .contact-section-header, h2{
@@ -108,12 +124,11 @@ a {
     justify-content: center;
 }
 
-contact-links {
+.contact-links {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     width: 100%;
     flex-wrap: wrap;
-
 }
 
 
@@ -121,6 +136,7 @@ contact-links {
 footer {
     display: flex;
     justify-content: center;
+    background-color: #36454F;
 }
 
 @media (max-width: 980px) {
