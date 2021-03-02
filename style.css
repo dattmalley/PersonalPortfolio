@@ -50,7 +50,7 @@ font-family: Kanit, sans-serif;
 }
 
 .hero-image {
-    background: url(Matt\ Drone\ Pic.JPG);
+    background: url(/images/Matt\ Drone\ Pic.JPG);
     width: 100vw;
     background-repeat: no-repeat;
     /* display: center; */
