@@ -70,3 +70,7 @@ function myFunction() {
 function sumTwoThings(one, two) {
   return one + two;
 }
+
+// Arrow Functions
+
+const theFunction = () => 'I am awesome'
