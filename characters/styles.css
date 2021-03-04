@@ -4,13 +4,12 @@
 }
 
 #main {
-    display: main;
+    display: flex;
     flex-wrap: wrap;
 }
 
 figure > img {
     height: 200px;
-
 }
 
 body {
