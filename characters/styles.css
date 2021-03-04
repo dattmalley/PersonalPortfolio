@@ -1,0 +1,18 @@
+* {
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+#main {
+    display: main;
+    flex-wrap: wrap;
+}
+
+figure > img {
+    height: 200px;
+
+}
+
+body {
+    background-color: cadetblue;
+}
