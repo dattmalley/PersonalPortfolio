@@ -1,13 +1,15 @@
-* {
-    margin: 0;
-    box-sizing: border-box;
-}
-
 body {
     background-color: black;
 }
 
-.movieList {
+/* * {
+    margin: 0;
+    box-sizing: border-box;
+} */
+
+
+
+/* .movieList {
     display: flex;
     flex-wrap: wrap;
 }
@@ -19,4 +21,4 @@ figure {
 figCaption {
     text-align: center;
     background-color: black;
-}
+} */ 
