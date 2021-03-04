@@ -10,7 +10,7 @@ maleButton.textContent = 'Male Characters'
 mainHeader.appendChild(maleButton)
 document.body.insertBefore(mainHeader, mainContent)
 maleButton.addEventListener('click', () => {
-    populateDOM(maleCharacters)
+    populateDOM(otherCharacters)
 })
 
 const maleCharacters = people.filter(person => person.gender === 'male') 
