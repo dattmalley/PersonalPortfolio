@@ -54,7 +54,7 @@ function getLastNumber(url) {
 }
 
 function removeChildren(container){
-    while (Element.firstChild) {
+    while (container.firstChild) {
         container.removeChild(container.firstChild)
     }
 }
