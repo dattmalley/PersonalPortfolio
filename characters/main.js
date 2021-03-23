@@ -4,14 +4,18 @@ const mainContent = document.querySelector('main')
 
 const mainHeader = document.createElement('header')
 
+document.body.insertBefore(mainHeader, mainContent)
+
 const maleButton = document.createElement('button')
 maleButton.textContent = 'Male Characters'
-
+maleButton.addEventListener('click', () => populateDOM(maleCharacters))
 mainHeader.appendChild(maleButton)
-document.body.insertBefore(mainHeader, mainContent)
-maleButton.addEventListener('click', () => {
-    populateDOM(femaleCharacters)
-})
+
+const femaleButton = document.createElement('button')
+femaleButton.textContent = 'Female Characters'
+femaleButton.addEventListener('click', () => populateDOM(femaleCharacters))
+mainHeader.appendChild(femaleButton)
+
 
 const maleCharacters = people.filter(person => person.gender === 'male') 
 const femaleCharacters = people.filter(person => person.gender === 'female') 
@@ -21,9 +25,9 @@ const otherCharacters = people.filter(person => {
     }
 }) 
 
-console.log(maleCharacters)
 
 function populateDOM(characters) {
+    removeChildren(mainContent)
     characters.forEach(person => {
         const charFigure = document.createElement('figure')
         const charImg = document.createElement('img')
@@ -47,4 +51,10 @@ function getLastNumber(url) {
         start++
     }
     return url.slice(start, end)
+}
+
+function removeChildren(container){
+    while (Element.firstChild) {
+        container.removeChild(container.firstChild)
+    }
 }
