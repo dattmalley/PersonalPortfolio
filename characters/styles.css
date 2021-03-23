@@ -1,17 +1,21 @@
 * {
     margin: 0px;
     box-sizing: border-box;
+    color: black;
 }
 
 #main {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 figure > img {
     height: 200px;
+    border-radius: 15%;
 }
 
 body {
-    background-color: cadetblue;
+    background-color: rgba(0, 0, 0, 0.536);
 }
+
