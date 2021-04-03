@@ -1,0 +1,12 @@
+:root {
+    margin: 5px;
+    box-sizing: border-box;
+}
+
+main {
+    display: flex;
+}
+
+li {
+    list-style-type: none;
+}
