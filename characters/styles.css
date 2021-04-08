@@ -16,6 +16,35 @@
     justify-content: space-evenly;
 }
 
+#navbar {
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    width: 30%;
+    /* background-color: rgb(255,255,255,.75); */
+}
+
+.navlist {
+    display: flex;
+    list-style-type: none;
+}
+
+.navlist li {
+    color: black;
+}
+
+.navlist a {
+    font-size: 1.5em;
+    padding: 1em;
+    text-decoration: none;
+    transition: transform 0.3s ease-out;
+}
+
+.navlist a:hover {
+    transform: translateY(-4px);
+    background-color: white;
+}
+
 figure > img {
     height: 200px;
     border-radius: 15%;
@@ -24,5 +53,3 @@ figure > img {
 body {
     background-color: rgba(0, 0, 0, 0.536);
 }
-
-cursor: url(foo.cur), url(https://static.wikia.nocookie.net/lucasfilm/images/2/20/Lightsaber_blue.svg.png/revision/latest/scale-to-width-down/340?cb=20130412201753), auto;
