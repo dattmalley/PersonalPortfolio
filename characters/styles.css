@@ -19,7 +19,7 @@
 #navbar {
     display: flex;
     justify-content: flex-end;
-    position: fixed;
+    /* position: fixed; */
     width: 30%;
     /* background-color: rgb(255,255,255,.75); */
 }
@@ -41,7 +41,7 @@
 }
 
 .navlist a:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
     background-color: white;
 }
 

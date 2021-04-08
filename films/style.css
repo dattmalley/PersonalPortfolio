@@ -1,17 +1,50 @@
+* {
+    margin: 0px;
+    box-sizing: border-box;
+    color: black;
+    font-family: Roboto Mono;
+    text-align: center;
+}
+
 body {
     background-color: black;
 }
 
-{
-    margin: 0;
-    box-sizing: border-box;
-} 
 
+#navbar {
+    display: flex;
+    justify-content: flex-end;
+    /* position: fixed; */
+    width: 30%;
+    /* background-color: rgb(255,255,255,.75); */
+}
 
+.navlist {
+    display: flex;
+    list-style-type: none;
+}
+
+.navlist li {
+    color: white;
+}
+
+.navlist a {
+    font-size: 1.5em;
+    padding: 1em;
+    text-decoration: none;
+    transition: transform 0.3s ease-out;
+}
+
+.navlist a:hover {
+    transform: translateY(-5px);
+    background-color:rgb(255,255,255,.75);
+}
 
 .movieList {
     display: flex;
     flex-wrap: wrap;
+    align-content: space-around;
+    
 } 
 
 figure {

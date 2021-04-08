@@ -1,6 +1,9 @@
-:root {
-    margin: 5px;
+* {
+    margin: 0px;
     box-sizing: border-box;
+    color: black;
+    font-family: Roboto Mono;
+    text-align: center;
 }
 
 body {
