@@ -2,12 +2,41 @@
     margin: 0px;
     box-sizing: border-box;
     color: black;
-    font-family: Roboto Mono;
+    font-family: Kanit;
     text-align: center;
 }
 
 body {
     background-color: black;
+}
+
+#navbar {
+    display: flex;
+    justify-content: flex-end;
+    /* position: fixed; */
+    width: 100%;
+    background-color: rgb(255,255,255,.75);
+}
+
+.navlist {
+    display: flex;
+    list-style-type: none;
+}
+
+.navlist li {
+    color: black;
+}
+
+.navlist a {
+    font-size: 1.5em;
+    padding: 1em;
+    text-decoration: none;
+    transition: transform 0.3s ease-out;
+}
+
+.navlist a:hover {
+    transform: translateY(-5px);
+    background-color: white;
 }
 
 main {
@@ -21,5 +50,6 @@ a {
 
 li {
     list-style-type: none;
+    color: white;
 }
 

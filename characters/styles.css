@@ -20,8 +20,8 @@
     display: flex;
     justify-content: flex-end;
     /* position: fixed; */
-    width: 30%;
-    /* background-color: rgb(255,255,255,.75); */
+    width: 100%;
+    background-color: rgb(255,255,255,.75);
 }
 
 .navlist {
@@ -42,7 +42,7 @@
 
 .navlist a:hover {
     transform: translateY(-5px);
-    background-color: white;
+    background-color: rgb(255,255,255,.75);
 }
 
 figure > img {
