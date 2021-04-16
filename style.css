@@ -82,6 +82,11 @@ font-family: Kanit, sans-serif;
     text-decoration: none;
 }
 
+.projectImage {
+    height: 400px;
+    width 400px;
+}
+
 .mural {
     margin-top: 75px;
     margin-bottom: 57px;
