@@ -18,25 +18,34 @@ body {
     background-color: rgb(255,255,255,.75);
 }
 
-.navlist {
+.topNav {
     display: flex;
     list-style-type: none;
 }
 
-.navlist li {
+.topNav li {
     color: black;
 }
 
-.navlist a {
+.topNav a {
     font-size: 1.5em;
     padding: 1em;
     text-decoration: none;
     transition: transform 0.3s ease-out;
 }
 
-.navlist a:hover {
+.topNav a:hover {
     transform: translateY(-5px);
     background-color: white;
+}
+
+.navList :hover {
+    transform: translateY(-5px);
+    background-color: grey;
+}
+
+.navList {
+    margin: 5px;
 }
 
 main {

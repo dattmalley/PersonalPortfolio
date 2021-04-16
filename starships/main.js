@@ -1,5 +1,5 @@
 import { starships } from '../data/starships.js'
-import { getLastNumber, removeChildren } from '../utils/index.js'
+import { removeChildren, getLastNumber } from '../utils/index.js'
 
 const main = document.querySelector('main')
 const navList = document.querySelector('.navList')
@@ -23,9 +23,17 @@ function populateShipView(shipData) {
     let shipImage = document.createElement('img') 
     let shipNum = getLastNumber(shipData.url)
     shipImage.src = `https://starwars-visualguide.com/assets/img/starships/${shipNum}.jpg`
-    shipImage.addEventListener('error')
+    shipImage.addEventListener('error', () => {
+        console.log('Oops! Ship in Garage!')
+        shipImage.hidden= true
+    })
     shipView.appendChild(shipImage)
 }
 
 populateNav()
-populateShipView()
+
+function addStarField(element, numStars) {
+    element.style.setProperty('background-color', 'black')
+}
+
+addStarField(document.querySelector('body', 1000))
