@@ -5,6 +5,11 @@
     font-family: Kanit;
 }
 
+main {
+    display: flex;
+    height: 100vh;
+}
+
 body {
     background-color: black;
 }
