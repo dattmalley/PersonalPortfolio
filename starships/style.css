@@ -7,11 +7,17 @@
 
 main {
     display: flex;
-    height: 100vh;
+    /* height: 100vh; */
 }
 
-body {
-    background-color: black;
+/* body {
+    width: 100vw;
+    height: 100vh;
+} */
+
+img, .topNav, .navList {
+    z-index: 1;
+    position: relative;
 }
 
 #navbar {
@@ -50,6 +56,7 @@ body {
 
 .navList {
     margin: 15px;
+    width: 400px;
 }
 
 main {
@@ -66,3 +73,12 @@ li {
     color: white;
 }
 
+.bulma-box {
+    text-align: center;
+    font-size: x-large;
+    font-weight: 900;
+}
+
+.modal {
+    background-color: rgba(232, 209, 204, 0.255);
+}
