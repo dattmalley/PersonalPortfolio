@@ -8,6 +8,7 @@
 
 body {
     background-color: black;
+    align-items: center;
 }
 
 #navbar {
@@ -39,18 +40,25 @@ body {
     background-color: #000;
 }
 
+/* h1 {
+    color: white;
+} */
+
 .movieList {
     display: flex;
     flex-wrap: wrap;
-    align-content: space-around;
-    
+    justify-content: space-around;
 } 
 
 figure {
     margin: 1em;
+    align-content: center;
 }
 
 figCaption {
     text-align: center;
     background-color: black;
-} */ 
+} 
+
+/*leave cursor code at bottom of css */
+/* Start https://www.cursors-4u.com */ * {cursor: url(https://cur.cursors-4u.net/others/oth-1/oth28.cur), auto !important;} /* End https://www.cursors-4u.com */

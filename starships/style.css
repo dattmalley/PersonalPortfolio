@@ -3,6 +3,8 @@
     box-sizing: border-box;
     color: black;
     font-family: Kanit;
+    scroll-behavior: smooth;
+    scr
 }
 
 main {
@@ -54,8 +56,10 @@ img, .topNav, .navList {
 }
 
 .navList {
-    margin: 15px;
-    width: 400px;
+    margin: 3em;
+    /* width: 400px; */
+    font-size: large;
+    font-weight: bold;
 }
 
 main {
@@ -71,6 +75,8 @@ li {
     list-style-type: none;
     color: white;
 }
+
+
 
 .bulma-box {
     text-align: center;

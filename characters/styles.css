@@ -1,19 +1,20 @@
 * {
     margin: 0px;
     box-sizing: border-box;
-    color: black;
-    font-family: Roboto Mono;
+    background-color: ;
+    font-family: Kanit;
     text-align: center;
 }
 
-/* h1 {
-    margin-bottom: .25em;
-} */
+h1 {
+    color: white;
+}
 
 #main {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    margin: 45px;
 }
 
 #navbar {
@@ -48,8 +49,23 @@
 figure > img {
     height: 200px;
     border-radius: 15%;
+    margin: 1em;
+}
+
+figure > figcaption {
+    margin-top: -1em;
+    align-items: center;
+    color: yellow;
+}
+
+button {
+    margin: 3em;
+    
 }
 
 body {
-    background-color: rgba(0, 0, 0, 0.536);
+    background-color: rgb(0, 0, 0);
 }
+
+/*leave cursor code at bottom of css */
+/* Start https://www.cursors-4u.com */ * {cursor: url(https://cur.cursors-4u.net/others/oth-1/oth28.cur), auto !important;} /* End https://www.cursors-4u.com */
