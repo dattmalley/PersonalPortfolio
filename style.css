@@ -1,11 +1,13 @@
 * {
     margin: 0;
     padding: 0;
+    font-family: Kanit, sans-serif;
+    scroll-behavior: smooth;
 }
 
 html {
     box-sizing: border-box;
-    scroll-behavior: smooth;
+    
 }
 
 h1 {
@@ -17,7 +19,7 @@ p {
 }
 
 body {
-font-family: Kanit, sans-serif;
+    
 }
 
 #navbar {
@@ -50,11 +52,9 @@ font-family: Kanit, sans-serif;
 }
 
 .hero-image {
-    background: url(/images/Matt\ Drone\ Pic.JPG);
+    background: url(/images/Matt\ Drone\ Pic.JPG) center;
     width: 100vw;
     background-repeat: no-repeat;
-    /* display: center; */
-    /* flex-direction: column; */
     align-items: center;
 }
 
@@ -144,10 +144,32 @@ footer {
     background-color: #36454F;
 }
 
-@media (max-width: 980px) {
-    html {
-        font-size: 75%;
+@media (min-width: 375px) (max-width: 812px) {
+    #navbar {
+        display: flex;
+        justify-content: flex-start;
+        position: fixed;
+        width: 100%;
+        background-color: rgb(255,255,255,.75);
     }
+
+    .projects-grid {
+        margin: 1em;
+    }
+
+    .projectImage {
+        max-width: 80vw;
+    }
+
+    p {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        margin-left: 2em;
+        margin-right: 2em;
+    }
+
+
 }
 
 @media (max-width: 460px) {

@@ -67,5 +67,13 @@ body {
     background-color: rgb(0, 0, 0);
 }
 
+@media (max-width: 812px) {
+    figure > img {
+        height: 100px;
+        flex-direction: column;
+    }
+}
+  
+
 /*leave cursor code at bottom of css */
 /* Start https://www.cursors-4u.com */ * {cursor: url(https://cur.cursors-4u.net/others/oth-1/oth28.cur), auto !important;} /* End https://www.cursors-4u.com */
