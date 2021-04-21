@@ -74,3 +74,50 @@ function sumTwoThings(one, two) {
 // Arrow Functions
 
 const theFunction = () => 'I am awesome'
+
+// a higher order funciton is a funciton that accepts another funciton as a parameter.
+// filter, map and reduce are the most poluar, but forEach, ever, find, and some are also HOFs that we will be using in the Congress page.
+
+// filter method example. Filter returns an array of all elements that 'pass the test'
+// written as Array.prototype.filter() | array.prototype.map() | 
+
+const pilots = [
+{
+  id: 2,
+  name: "Wedge Antilles",
+  faction: "Rebels"
+},
+{
+  id: 8,
+  name: "Ciena Ree",
+  faction: "Empire"
+},
+{
+  id: 40, 
+  name: "Iden Versio",
+  faction: "Empire"
+},
+{
+  id: 66,
+  name: "Thane Kyrell",
+  faction: "Rebels"
+}
+];
+
+const rebels = pilots.filter(pilot => pilot.faction === 'Rebels') //you can name it anything you want. because they are pilots we named it that.
+const empire = pilots.filter((pilot) => {
+  return pilot.faction === 'Empire'
+})
+
+// don't need double (()) but if you want you can. 
+// need a return statement because you are asking for more than one filter.
+
+//aaray helper method 'map'
+
+const pilotsWithDate = pilots.map(pilot => {
+  let date = new Date();
+  pilot.date = Date.now().toLocaleDateString("en-US")
+  return pilot;
+});
+
+

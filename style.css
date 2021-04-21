@@ -169,7 +169,7 @@ footer {
         margin-right: 2em;
     }
 
-    .project-tile {
+    .project-tile, img{
         max-width: 90vw;
     }
 

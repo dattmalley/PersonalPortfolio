@@ -60,10 +60,23 @@ figCaption {
     background-color: black;
 } 
 
-@media (max-width: 812px) {
-    figure > img {
+@media (min-width:312) (max-width: 812px) {
+    .movieList {
+        display: flex;
+        flex-flow: column;
+    }
+
+    .newImg {
         height: 100px;
-        flex-direction: column;
+    }
+
+    #navList a {
+        display: flex;
+        justify-content: start;
+    }
+
+    #navList li {
+        font-size: .5em;
     }
 }
 
