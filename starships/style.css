@@ -11,8 +11,7 @@ main {
 }
 
 /* body {
-    width: 100vw;
-    height: 100vh;
+    
 } */
 
 img, .topNav, .navList {
@@ -82,3 +81,8 @@ li {
 .modal {
     background-color: rgba(232, 209, 204, 0.255);
 }
+
+
+
+/*leave cursor code at bottom of css */
+/* Start https://www.cursors-4u.com */ * {cursor: url(https://cur.cursors-4u.net/others/oth-1/oth28.cur), auto !important;} /* End https://www.cursors-4u.com */
