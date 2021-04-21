@@ -169,6 +169,9 @@ footer {
         margin-right: 2em;
     }
 
+    .project-tile {
+        max-width: 90vw;
+    }
 
 }
 
