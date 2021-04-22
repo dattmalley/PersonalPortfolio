@@ -1,23 +1,62 @@
 * {
-    margin: 10px;
+    margin: 0;
     box-sizing: border-box;
+    font-family: Roboto;
 }
 
-.pageHeader {
+#navbar {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    /* position: fixed; */
+    width: 100%;
+    background: linear-gradient(#00c6fb, #005bea);
 }
 
-button {
-    
+.navlist {
+    display: flex;
+    list-style-type: none;
+}
+
+.navlist li {
+    color: white;
+}
+
+.navlist a {
+    font-size: 1.5em;
+    padding: 1em;
+    text-decoration: none;
+    transition: transform 0.3s ease-out;
+}
+
+.navlist a:hover {
+    transform: translateY(-5px);
+    background-color: rgba(245, 53, 53, 0.75);
+}
+
+.main {
+    display: flex;
+    margin: 10px;
 }
 
 .congressGrid {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     align-content: space-evenly;
+    
+}
+
+figure {
+    margin: 1em;
+    
+    
+}
+
+img {
+    border-radius: 50%;
+    border: 2px solid rgba(245, 53, 53, 0.75);
 }
 
 figcaption {
-    justify-content: center;
+    text-align: center;
 }
