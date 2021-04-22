@@ -1,0 +1,23 @@
+* {
+    margin: 10px;
+    box-sizing: border-box;
+}
+
+.pageHeader {
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    
+}
+
+.congressGrid {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-evenly;
+}
+
+figcaption {
+    justify-content: center;
+}
