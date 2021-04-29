@@ -20,7 +20,7 @@ function loadPage() {
     async (data) => {
       for (const singlePokemon of data.results) {
         await getAPIData(singlePokemon.url).then(
-            (pokeData) => populatePokeCard(singlePokemon)
+            (pokeData) => populatePokeCard(pokeData)
         )
       }
     }

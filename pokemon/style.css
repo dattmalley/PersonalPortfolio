@@ -2,6 +2,37 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: Kanit;
+    text-align: center;
+}
+
+#navbar {
+    display: flex;
+    justify-content: flex-end;
+    /* position: fixed; */
+    width: 100%;
+    background-color: rgba(255, 0, 0, 0.75);
+}
+
+.navlist {
+    display: flex;
+    list-style-type: none;
+}
+
+.navlist li {
+    color: white;
+}
+
+.navlist a {
+    font-size: 1.5em;
+    padding: 1em;
+    text-decoration: none;
+    transition: transform 0.3s ease-out;
+}
+
+.navlist a:hover {
+    transform: translateY(-5px);
+    background-color: rgb(0, 92, 172);
 }
 
 .pokeGrid {
@@ -11,7 +42,7 @@
 }
 
 .scene {
-    width: 200px;
+    width: 220px;
     height: 275px;
     border: 1px solid blue;
     margin: .75em;
