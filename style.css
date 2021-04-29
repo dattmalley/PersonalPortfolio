@@ -1,172 +1,243 @@
 * {
-    margin: 0;
-    padding: 0;
-    font-family: Kanit, sans-serif;
-    scroll-behavior: smooth;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
 }
 
 html {
-    box-sizing: border-box;
-    
+  box-sizing: border-box;
 }
 
 h1 {
-    font-size: 36px;
+  font-size: 36px;
 }
 
-p {
-     font-size: 24px;
+p,
+figcaption {
+  font-size: 24px;
+  font-family: Kanit, sans-serif;
 }
 
 #navbar {
-    display: flex;
-    justify-content: flex-end;
-    position: fixed;
-    width: 100%;
-    background-color: rgb(255,255,255,.75);
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  width: 100%;
+  background-color: rgb(255, 255, 255, 0.75);
 }
 
 .navlist {
-    display: flex;
-    list-style-type: none;
+  font-family: kanit;
+  font-weight: bold;
+  display: flex;
+  list-style-type: none;
 }
 
 .navlist li {
-    color: black;
+  color: black;
 }
 
 .navlist a {
-    font-size: 1.5em;
-    padding: 1em;
-    text-decoration: none;
-    transition: transform 0.3s ease-out;
+  font-size: 1.5em;
+  padding: 1em;
+  text-decoration: none;
+  transition: transform 0.3s ease-out;
 }
 
 .navlist a:hover {
-    transform: translateY(-5px);
-    background-color: white;
-}
-
-.hero-image {
-    background: url(/images/Matt\ Drone\ Pic.JPG) center;
-    width: 100vw;
-    background-repeat: no-repeat;
-    align-items: center;
+  transform: translateY(-5px);
+  background-color: white;
 }
 
 #welcome-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    height: 100vh;
-    color: white;
-    background-color: rgb(0,0,0, .25);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  height: 97vh;
+  color: white;
+  background-color: white;
 }
 
-#welcome-section h1 {
-    margin-top: 200px;
+.bioText {
+  font-family: "Righteous", cursive;
+  font-size: 400px;
+  color: teal;
+  animation: fadeIn linear 4s;
+  -webkit-animation: fadeIn linear 4s;
+  -moz-animation: fadeIn linear 4s;
+  -o-animation: fadeIn linear 4s;
+  -ms-animation: fadeIn linear 4s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.pButton {
+  text-align: center;
+  margin-top: -65px;
+}
+
+.projectsButton {
+  letter-spacing: 3px;
+  width: 200px;
+  height: 80px;
+  border: none;
+  color: white;
+  background-color: #e38513;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 0 teal;
+  transition: ease-out 0.4s;
+  font-size: 2rem;
+  outline: none;
+}
+
+.projectsButton:hover {
+    box-shadow: inset 300 0 0 0 #028080;
+    cursor: pointer;
+    color: white;
 }
 
 .projects-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  margin: 35px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .project-tile {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .projectImage {
-    height: 350px;
+  height: 350px;
 }
 
 figure {
-    margin: 1rem;
+  margin: 1rem;
 }
 
 figcaption {
-    text-align: center;
-    font-size: 24px;
-    background-color: cornflowerblue;
-    margin-top: -10px;
-    color: black;
+  text-align: center;
+  font-size: 24px;
+  background-color: cornflowerblue;
+  margin-top: -10px;
+  color: black;
 }
 
 a {
-    text-decoration: none;
-    font-size: 22px;
-    color: black;
+  text-decoration: none;
+  font-size: 22px;
+  color: black;
 }
 
-.contact-section-header, h2{
-    font-size: 3rem;
+.contact-section-header,
+h2 {
+  font-size: 3rem;
 }
 
 .contact-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 35vh;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 35vh;
 }
 
 #contact {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .contact-links {
-    display: flex;
-    justify-content: space-evenly;
-    width: 100%;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
-
-
 footer {
-    display: flex;
-    justify-content: center;
-    background-color: #36454F;
+  display: flex;
+  justify-content: center;
+  background-color: #36454f;
 }
 
 @media (min-width: 375px) (max-width: 812px) {
-    #navbar {
-        display: flex;
-        justify-content: flex-start;
-        position: fixed;
-        width: 100%;
-        background-color: rgb(255,255,255,.75);
-    }
+  #navbar {
+    display: flex;
+    justify-content: flex-start;
+    position: fixed;
+    width: 100%;
+    background-color: rgb(255, 255, 255, 0.75);
+  }
 
-    .projects-grid {
-        margin: 1em;
-    }
+  .projects-grid {
+    margin: 1em;
+  }
 
-    .projectImage {
-        max-width: 80vw;
-    }
+  .projectImage {
+    max-width: 80vw;
+  }
 
-    p {
-        display: flex;
-        justify-content: center;
-        align-content: center;
-        margin-left: 2em;
-        margin-right: 2em;
-    }
+  p {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin-left: 2em;
+    margin-right: 2em;
+  }
 
-    .project-tile, img{
-        max-width: 90vw;
-    }
-
+  .project-tile,
+  img {
+    max-width: 90vw;
+  }
 }
 
 @media (max-width: 460px) {
-    html {
-        font-size: 50%;
-    }
+  html {
+    font-size: 50%;
+  }
 }
