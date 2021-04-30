@@ -73,6 +73,7 @@ h3 {
     text-align: center;
     font-weight: bold;
     backface-visibility: hidden;
+    padding-top: 10px;
 }
 
 .card__face--front {
