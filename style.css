@@ -116,7 +116,7 @@ p, figcaption, footer, h2, a {
 
 .pButton {
   text-align: center;
-  margin-top: -65px;
+  margin-top: -100px;
 }
 
 .projectsButton {
@@ -138,7 +138,7 @@ p, figcaption, footer, h2, a {
 }
 
 .projects-grid {
-  margin: 35px;
+  margin-top: 55px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

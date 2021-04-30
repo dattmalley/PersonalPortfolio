@@ -21,7 +21,7 @@ async function getAPIData(url) {
     return data;
   } catch (error) {
     console.log(error);
-    alert("Image doesn't exist.")
+    alert("Pokemon doesn't exist, catch the others!")
   }
 }
 
