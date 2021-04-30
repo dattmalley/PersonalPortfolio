@@ -95,7 +95,7 @@ function populateCardBack(pokemon) {
   let pokeBack = document.createElement("div");
   pokeBack.className = "card__face card__face--back";
   let backLabel = document.createElement("p");
-  backLabel.textContent = "Type(s)";
+  backLabel.textContent = "Moves";
   pokeBack.appendChild(backLabel);
   return pokeBack;
 }
