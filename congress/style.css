@@ -33,7 +33,9 @@
     background-color: rgba(245, 53, 53, 0.75);
 }
 
-
+header {
+    text-align: center;
+}
 
 .main {
     display: flex;
@@ -49,25 +51,47 @@
 }
 
 figure {
-    margin: 1em;
-    
-    
+    margin: 1em;   
 }
 
 img {
     border-radius: 50%;
-    border: 2px solid rgba(245, 53, 53, 0.75);
 }
 
 figcaption {
     text-align: center;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.fa-republican {
+    color: red;
+}
+
+.fa-democrat {
+    color: blue;
+}
+
+.fa-angellist {
+    color: green;
 }
 
 .scrollTop {
-    border: none;
-    font-size: large;
-    margin-bottom: 25px;
-    text-align: center;
-    color: blue;
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 99;
+  font-size: 18px;
+  border: none;
+  outline: none;
+  background-color: blue;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 4px;
+  color: white;
+  scroll-behavior: smooth;
+}
 
+.scrollTop:hover {
+    background-color: red;
 }
