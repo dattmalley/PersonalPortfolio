@@ -1,12 +1,15 @@
 import { senators } from '../data/senators.js'
 import { representatives } from '../data/representatives.js'
+import { removeChildren } from '../utils/index.js'
 
 const congressGrid = document.querySelector('.congressGrid')
-const senioritySort = document.querySelector('#senioritySort')
+const seniorityButton = document.querySelector('#senioritySort')
 const birthdaySort = document.querySelector('#birthdaySort')
 
-function populateCongressGrid(simplifiedList) {
-    console.log(simplifiedList)
+seniorityButton.addEventListener('click', () => senioritySort())
+
+function populateCongressDiv(simplifiedList) {
+    removeChildren(congressGrid)
     simplifiedList.forEach(person => {
         let personDiv = document.createElement('div')
         let personFig = document.createElement('figure')
@@ -29,11 +32,16 @@ function getSimplifiedPeople(peopleList) {
         return {
             id: person.id,
             name: `${person.first_name} ${middleName} ${person.last_name}`,
-            imgURL: `https://www.govtrack.us/static/legislator-photos/${person.govtrack_id}-200px.jpeg`
+            imgURL: `https://www.govtrack.us/static/legislator-photos/${person.govtrack_id}-200px.jpeg`,
+            seniority: parseInt(person.seniority, 10)
         }
     })
 }
 
-populateCongressGrid(getSimplifiedPeople(representatives))
+function senioritySort () {
+    populateCongressDiv(getSimplifiedPeople(senators).sort((a, b) => a.seniority - b.seniority).reverse())
+}
+
+populateCongressDiv(getSimplifiedPeople(senators))
 
 
