@@ -12,8 +12,7 @@ h1 {
   font-size: 36px;
 }
 
-p,
-figcaption {
+p, figcaption, footer, h2, a {
   font-size: 24px;
   font-family: Kanit, sans-serif;
 }
@@ -129,15 +128,13 @@ figcaption {
   background-color: #e38513;
   border-radius: 4px;
   box-shadow: inset 0 0 0 0 teal;
-  transition: ease-out 0.4s;
+  transition: ease-out 0.2s;
   font-size: 2rem;
   outline: none;
 }
 
 .projectsButton:hover {
-    box-shadow: inset 300 0 0 0 #028080;
-    cursor: pointer;
-    color: white;
+    transform: translateY(-8px);
 }
 
 .projects-grid {
@@ -162,9 +159,9 @@ figure {
 figcaption {
   text-align: center;
   font-size: 24px;
-  background-color: cornflowerblue;
+  background-color: teal;
   /* margin-top: -10px; */
-  color: black;
+  color: white;
 }
 
 a {
@@ -202,13 +199,30 @@ h2 {
   justify-content: space-evenly;
   width: 100%;
   flex-wrap: wrap;
+  margin: 30px;
+  color: teal;
+  font-weight: bold;
+}
+
+.links {
+    color: #e38513;
+
+}
+
+.links i {
+    color: teal;
+}
+
+.contact-links a:hover {
+    transform: translateY(-8px);
 }
 
 
 footer {
   display: flex;
   justify-content: center;
-  background-color: #36454f;
+  background-color: white;
+  font-size: small;
 }
 
 @media (min-width: 375px) (max-width: 812px) {
