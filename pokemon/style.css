@@ -45,7 +45,6 @@
 .scene {
     width: 220px;
     height: 275px;
-    border: 1px solid blue;
     margin: .75em;
     perspective: 600px;
 }
@@ -77,7 +76,8 @@ h3 {
 }
 
 .card__face--front {
-    background: linear-gradient(#000000, #D0302B);
+    background-image: url(images/pokebattle.png);
+    border-radius: 25%;
 }
 
 .card__face--front img {
@@ -86,8 +86,10 @@ h3 {
 }
 
 .card__face--back {
-    background: linear-gradient(#ffffff, #0B52B5);
+    background-image: url(images/pokescape.jpeg);
     transform: rotateY(180deg);
+    border-radius: 25%;
+    color: yellow;
 }
 
 button {
