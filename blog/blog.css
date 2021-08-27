@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    scroll-behavior: smooth;
+  }
+  
+  html {
+    box-sizing: border-box;
+  }
+  
+  h1 {
+    font-size: 36px;
+  }
+  
+  p, figcaption, footer, h2, a {
+    font-size: 24px;
+    font-family: Kanit, sans-serif;
+  }
+  
+  #navbar {
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    width: 100%;
+    background-color: rgb(255, 255, 255, 0.75);
+  }
+  
+  .navlist {
+    font-family: kanit;
+    font-weight: bold;
+    display: flex;
+    list-style-type: none;
+  }
+  
+  .navlist li {
+    color: black;
+  }
+  
+  .navlist a {
+    font-size: 1.5em;
+    padding: 1em;
+    text-decoration: none;
+    transition: transform 0.3s ease-out;
+  }
+  
+  .navlist a:hover {
+    transform: translateY(-5px);
+    background-color: white;
+  }
+
+  .blogTop {
+      display: flex;
+      align-content: center;
+      margin: 5%;
+  }
