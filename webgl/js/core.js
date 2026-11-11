@@ -114,6 +114,12 @@ float fbm(vec2 p) {
         -V3.dot(x, eye), -V3.dot(y, eye), -V3.dot(z, eye), 1,
       ]);
     },
+    ortho(l, r, b, t, n, f) {
+      const m = new Float32Array(16);
+      m[0] = 2 / (r - l); m[5] = 2 / (t - b); m[10] = -2 / (f - n);
+      m[12] = -(r + l) / (r - l); m[13] = -(t + b) / (t - b); m[14] = -(f + n) / (f - n); m[15] = 1;
+      return m;
+    },
     translate(x, y, z) { const m = M4.ident(); m[12] = x; m[13] = y; m[14] = z; return m; },
     scale(x, y = x, z = x) { const m = M4.ident(); m[0] = x; m[5] = y; m[10] = z; return m; },
     rotX(a) { const m = M4.ident(), c = Math.cos(a), s = Math.sin(a); m[5] = c; m[6] = s; m[9] = -s; m[10] = c; return m; },
@@ -192,6 +198,44 @@ float fbm(vec2 p) {
     }
     return { pos, nrm, uv, idx, count: idx.length, vertexCount: vc };
   };
+  // Torus knot tube (p=2, q=3) with analytic normals; u runs along the knot, v around the tube.
+  geo.torusKnot = function (nu = 400, nv = 48, tube = 0.28, R = 1.25, r = 0.55) {
+    const C = (t) => [(R + r * Math.cos(3 * t)) * Math.cos(2 * t), r * Math.sin(3 * t), (R + r * Math.cos(3 * t)) * Math.sin(2 * t)];
+    return geo.surface(nu, nv, (u, v) => {
+      const t = u * Math.PI * 2, e = 1e-3;
+      const c = C(t), cp = C(t + e), cm = C(t - e);
+      const T = V3.norm(V3.sub(cp, cm));
+      const N = V3.norm(V3.sub(V3.add(cp, cm), V3.scale(c, 2)));
+      const B = V3.cross(T, N);
+      const a = v * Math.PI * 2;
+      const n = V3.add(V3.scale(N, Math.cos(a)), V3.scale(B, Math.sin(a)));
+      return { p: V3.add(c, V3.scale(n, tube)), n };
+    });
+  };
+  geo.sphere = function (nu = 48, nv = 24, rad = 1) {
+    return geo.surface(nu, nv, (u, v) => {
+      const a = u * Math.PI * 2, b = v * Math.PI;
+      const d = [Math.sin(b) * Math.cos(a), Math.cos(b), Math.sin(b) * Math.sin(a)];
+      return { p: d.map((x) => x * rad), n: d };
+    });
+  };
+  geo.torus = function (nu = 96, nv = 24, R = 1, r = 0.25) {
+    return geo.surface(nu, nv, (u, v) => {
+      const a = u * Math.PI * 2, b = v * Math.PI * 2;
+      return { p: [Math.cos(a) * (R + r * Math.cos(b)), r * Math.sin(b), Math.sin(a) * (R + r * Math.cos(b))], n: [Math.cos(a) * Math.cos(b), Math.sin(b), Math.sin(a) * Math.cos(b)] };
+    });
+  };
+  /** Upload a surface (pos/nrm/uv/idx) into a VAO at locations 0/1/2. */
+  geo.upload = function (util, g) {
+    const gl = util.gl;
+    const vao = util.vao([
+      { buffer: util.buffer(gl.ARRAY_BUFFER, g.pos), loc: 0, size: 3 },
+      { buffer: util.buffer(gl.ARRAY_BUFFER, g.nrm), loc: 1, size: 3 },
+      { buffer: util.buffer(gl.ARRAY_BUFFER, g.uv), loc: 2, size: 2 },
+    ], util.buffer(gl.ELEMENT_ARRAY_BUFFER, g.idx));
+    return { vao, count: g.count, type: g.idx instanceof Uint32Array ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT,
+      draw(instances) { gl.bindVertexArray(vao); if (instances) gl.drawElementsInstanced(gl.TRIANGLES, g.count, this.type, 0, instances); else gl.drawElements(gl.TRIANGLES, g.count, this.type, 0); } };
+  };
   Sandbox.geo = geo;
 
   /* ------------------------------------------------------------------ */
@@ -200,7 +244,8 @@ float fbm(vec2 p) {
   const PRELUDE =
     '#version 300 es\n' +
     'precision highp float;\nprecision highp int;\n' +
-    'precision highp sampler2D;\nprecision highp sampler3D;\nprecision highp usampler2D;\n';
+    'precision highp sampler2D;\nprecision highp sampler3D;\nprecision highp usampler2D;\n' +
+    'precision highp sampler2DArray;\nprecision highp sampler2DShadow;\n';
 
   Sandbox.createUtil = function (gl) {
     const tracked = [];
@@ -215,6 +260,8 @@ float fbm(vec2 p) {
         case 'renderbuffer': gl.deleteRenderbuffer(obj); break;
         case 'vao': gl.deleteVertexArray(obj); break;
         case 'tf': gl.deleteTransformFeedback(obj); break;
+        case 'sampler': gl.deleteSampler(obj); break;
+        case 'query': gl.deleteQuery(obj); break;
       }
     };
 
@@ -309,7 +356,7 @@ float fbm(vec2 p) {
         const target = o.target || gl.TEXTURE_2D;
         gl.bindTexture(target, t);
         const internal = o.internal || gl.RGBA8, format = o.format || gl.RGBA, type = o.type || gl.UNSIGNED_BYTE;
-        if (target === gl.TEXTURE_3D) {
+        if (target === gl.TEXTURE_3D || target === gl.TEXTURE_2D_ARRAY) {
           gl.texImage3D(target, 0, internal, o.width, o.height, o.depth, 0, format, type, o.data || null);
           gl.texParameteri(target, gl.TEXTURE_WRAP_R, o.wrap || gl.CLAMP_TO_EDGE);
         } else {
@@ -332,21 +379,37 @@ float fbm(vec2 p) {
         gl.bindRenderbuffer(gl.RENDERBUFFER, null);
         return rb;
       },
-      /** colors: array of textures or {rb}; depth: renderbuffer or null */
-      framebuffer(colors = [], depth = null) {
+      /** colors: array of textures or {rb}; depth: renderbuffer, {tex} (depth texture) or null.
+       *  opts.stencil attaches the depth renderbuffer as DEPTH_STENCIL. */
+      framebuffer(colors = [], depth = null, opts = {}) {
         const fb = track('framebuffer', gl.createFramebuffer());
         gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
         colors.forEach((c, i) => {
           if (c && c.rb) gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0 + i, gl.RENDERBUFFER, c.rb);
           else gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0 + i, gl.TEXTURE_2D, c, 0);
         });
-        if (depth) gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depth);
-        const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+        const dAttach = opts.stencil ? gl.DEPTH_STENCIL_ATTACHMENT : gl.DEPTH_ATTACHMENT;
+        if (depth && depth.tex) gl.framebufferTexture2D(gl.FRAMEBUFFER, dAttach, gl.TEXTURE_2D, depth.tex, 0);
+        else if (depth) gl.framebufferRenderbuffer(gl.FRAMEBUFFER, dAttach, gl.RENDERBUFFER, depth);
+        if (!colors.length) { gl.drawBuffers([gl.NONE]); gl.readBuffer(gl.NONE); }
+        // A framebuffer with no attachments yet (filled later, e.g. framebufferTextureLayer) can't be complete.
+        const status = colors.length || depth ? gl.checkFramebufferStatus(gl.FRAMEBUFFER) : gl.FRAMEBUFFER_COMPLETE;
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         if (status !== gl.FRAMEBUFFER_COMPLETE && !gl.isContextLost()) throw new Error('Framebuffer incomplete: 0x' + status.toString(16));
         return fb;
       },
       transformFeedback() { return track('tf', gl.createTransformFeedback()); },
+      /** Sampler object: filtering / wrap / compare state decoupled from the texture. */
+      sampler(params = {}) {
+        const sm = track('sampler', gl.createSampler());
+        for (const k in params) {
+          const v = params[k];
+          if (typeof v === 'number' && !Number.isInteger(v)) gl.samplerParameterf(sm, gl[k] ?? +k, v);
+          else gl.samplerParameteri(sm, gl[k] ?? +k, v);
+        }
+        return sm;
+      },
+      query() { return track('query', gl.createQuery()); },
       /** Release a set of objects early (e.g. when resizing render targets). */
       release(...objs) {
         for (const o of objs) {
@@ -386,6 +449,11 @@ float fbm(vec2 p) {
     gl.blendFunc(gl.ONE, gl.ZERO);
     gl.blendEquation(gl.FUNC_ADD);
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 4);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    for (let i = 0; i < 8; i++) gl.bindSampler(i, null);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.stencilMask(0xff);
+    gl.disable(gl.STENCIL_TEST);
     gl.viewport(0, 0, w, h);
     gl.clearColor(0, 0, 0, 1);
   };
@@ -417,6 +485,12 @@ float fbm(vec2 p) {
           this.vy = -input.dragDX * 0.006;
           this.vp = input.dragDY * 0.006;
         }
+      }
+      const gp = input.gamepad;
+      if (gp) {
+        this.yaw -= (gp.axes[2] || 0) * dt * 2.2;
+        this.pitch += (gp.axes[3] || 0) * dt * 1.6;
+        this.dist *= 1 + ((gp.buttons[6] || 0) - (gp.buttons[7] || 0)) * dt * 1.5;
       }
       this.yaw += this.vy; this.pitch += this.vp;
       const d = Math.pow(this.damping, dt * 60);
@@ -546,8 +620,13 @@ float fbm(vec2 p) {
       input.pressed.clear();
       for (const p of input.pointers.values()) { p.px = p.x; p.py = p.y; p.puvx = p.uvx; p.puvy = p.uvy; }
     };
+    input.gamepad = null;
     input.update = function () {
       input.dragging = input.down && input.pointers.size === 1;
+      // Gamepad API: first connected pad, with a small dead zone on the sticks.
+      let gp = null;
+      try { for (const p of (navigator.getGamepads ? navigator.getGamepads() : [])) if (p && p.connected) { gp = p; break; } } catch (_) { /* blocked by policy */ }
+      input.gamepad = gp ? { id: gp.id, axes: gp.axes.map((a) => (Math.abs(a) < 0.12 ? 0 : a)), buttons: gp.buttons.map((b) => b.value) } : null;
     };
     return input;
   };

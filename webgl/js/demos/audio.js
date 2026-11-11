@@ -121,7 +121,7 @@ void main() {
   S.register({
     id: 'audio',
     title: 'Audio Reactive',
-    category: 'Sensors',
+    category: 'Sensors & Media',
     hint: 'start the synth or use your microphone',
     description: 'The Web Audio AnalyserNode supplies 256 frequency bins and 256 waveform samples each frame. Both go into a 256×2 single-channel R8 texture with texSubImage2D, and the vertex shaders read them with texelFetch to drive 256 instanced bars, a bass-pumped core and a waveform halo. A small built-in sequencer means it works without a microphone.',
     interact: [['Start synth', 'Generative beat (audio on)'], ['Use microphone', 'React to the room (permission prompt)'], ['Stop', 'Silence; idle animation resumes'], ['Drag / wheel', 'Orbit and zoom']],

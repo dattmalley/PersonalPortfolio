@@ -102,7 +102,7 @@ void main() {
     hint: 'move to bend the lens · hold to glitch',
     description: 'The scene is drawn into a 4× multisampled renderbuffer, resolved with blitFramebuffer into a texture with immutable storage (texStorage2D), and mipmapped every frame. The post pass uses the mip chain as a cheap bloom (textureLod), and the pointer drives chromatic aberration radiating from the cursor. Holding down glitches the image, and compare mode puts a before/after split under the pointer.',
     interact: [['Move', 'Aberration radiates from the pointer'], ['Hold', 'Glitch burst'], ['Compare', 'Split screen follows the pointer'], ['Pixelate', 'Quantize the image']],
-    features: ['MSAA renderbuffers', 'blitFramebuffer resolve', 'texStorage2D', 'NPOT mipmaps', 'textureLod bloom', 'Instanced scene'],
+    features: ['MSAA renderbuffers', 'blitFramebuffer resolve', 'invalidateFramebuffer', 'texStorage2D', 'NPOT mipmaps', 'textureLod bloom', 'Instanced scene'],
     params: [
       { key: 'ab', label: 'Chromatic aberration', type: 'range', min: 0, max: 3, step: 0.05, value: 1 },
       { key: 'bloom', label: 'Bloom', type: 'range', min: 0, max: 3, step: 0.05, value: 1.3 },
@@ -147,6 +147,8 @@ void main() {
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, s.msFbo);
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, s.resFbo);
       gl.blitFramebuffer(0, 0, ctx.width, ctx.height, 0, 0, ctx.width, ctx.height, gl.COLOR_BUFFER_BIT, gl.NEAREST);
+      // The multisampled contents are no longer needed: tell the driver it may discard them (saves bandwidth on tilers).
+      gl.invalidateFramebuffer(gl.READ_FRAMEBUFFER, [gl.COLOR_ATTACHMENT0, gl.DEPTH_ATTACHMENT]);
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.bindTexture(gl.TEXTURE_2D, s.resTex);
       gl.generateMipmap(gl.TEXTURE_2D);

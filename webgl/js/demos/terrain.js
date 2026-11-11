@@ -66,8 +66,8 @@ void main() {
     category: 'Camera & Navigation',
     hint: 'WASD / arrows · Q/E altitude · drag to look',
     description: 'A first-person fly-through over endless terrain. A 257×257 grid (66k vertices, so it needs 32-bit indices, which WebGL2 supports natively) follows the camera, and the vertex shader displaces it with integer-hash noise. The CPU runs the identical hash to keep you above the ground.',
-    interact: [['W A S D / arrows', 'Fly and strafe'], ['Q / E (or Space / Shift)', 'Climb / descend'], ['Drag', 'Mouse-look (touch: drag to steer)'], ['Autopilot', 'Cruise forward hands-free']],
-    features: ['Uint32 index buffers', 'Vertex-shader displacement', 'uint bitwise hashing', 'Exponential fog', 'Keyboard input'],
+    interact: [['W A S D / arrows', 'Fly and strafe'], ['Gamepad', 'Left stick fly · right stick look · triggers climb'], ['Q / E (or Space / Shift)', 'Climb / descend'], ['Drag', 'Mouse-look (touch: drag to steer)'], ['Autopilot', 'Cruise forward hands-free']],
+    features: ['Uint32 index buffers', 'Vertex-shader displacement', 'uint bitwise hashing', 'Exponential fog', 'Keyboard input', 'Gamepad API'],
     params: [
       { key: 'speed', label: 'Speed', type: 'range', min: 2, max: 40, step: 1, value: 12 },
       { key: 'height', label: 'Terrain height', type: 'range', min: 1, max: 12, step: 0.5, value: 6 },
@@ -108,8 +108,14 @@ void main() {
       const fwd = [Math.sin(s.yaw) * Math.cos(s.pitch), Math.sin(s.pitch), -Math.cos(s.yaw) * Math.cos(s.pitch)];
       const right = [Math.cos(s.yaw), 0, Math.sin(s.yaw)];
       let mf = (key('KeyW', 'ArrowUp') ? 1 : 0) - (key('KeyS', 'ArrowDown') ? 1 : 0);
-      const ms = (key('KeyD') ? 1 : 0) - (key('KeyA') ? 1 : 0);
-      const mu = (key('KeyE', 'Space') ? 1 : 0) - (key('KeyQ', 'ShiftLeft', 'ShiftRight') ? 1 : 0);
+      let ms = (key('KeyD') ? 1 : 0) - (key('KeyA') ? 1 : 0);
+      let mu = (key('KeyE', 'Space') ? 1 : 0) - (key('KeyQ', 'ShiftLeft', 'ShiftRight') ? 1 : 0);
+      const gp = input.gamepad;
+      if (gp) { // left stick: move · right stick: look · triggers: altitude
+        mf -= gp.axes[1] || 0; ms += gp.axes[0] || 0; mu += (gp.buttons[7] || 0) - (gp.buttons[6] || 0);
+        s.yaw += (gp.axes[2] || 0) * dt * 1.8;
+        s.pitch = clamp(s.pitch - (gp.axes[3] || 0) * dt * 1.2, -1.2, 1.0);
+      }
       if (params.auto && mf === 0) mf = 0.6;
       const target = [
         (fwd[0] * mf + right[0] * ms) * params.speed,

@@ -54,7 +54,7 @@ void main() {
   S.register({
     id: 'parallax',
     title: 'Parallax Tilt',
-    category: 'Sensors',
+    category: 'Sensors & Media',
     hint: 'move the pointer · tilt your phone',
     description: 'A procedural landscape of up to eight ridge layers, each offset by an amount that grows with its nearness to the viewer. On phones the DeviceOrientation API turns physical tilt into the parallax offset (iOS asks for permission first). On desktop the pointer stands in for tilt. Input is smoothed with critically damped easing.',
     interact: [['Move pointer', 'Shift the depth layers'], ['Tilt device', 'Gyroscope-driven parallax (tap "Enable tilt" on iOS)'], ['Idle', 'Gentle automatic drift']],

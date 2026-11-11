@@ -6,7 +6,7 @@
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  const GROUPS = ['Pointer & Touch', 'Camera & Navigation', 'Selection', 'GPU Motion', 'Animation', 'Rendering', 'Sensors'];
+  const GROUPS = ['Pointer & Touch', 'Camera & Navigation', 'Selection', 'Simulation', 'GPU Motion', 'Animation', 'Rendering', 'Performance', 'Sensors & Media'];
   const LETTERS = 'ABCDEFGHIJ';
   const demos = S.demos.slice().sort((a, b) => GROUPS.indexOf(a.category) - GROUPS.indexOf(b.category));
   const pad = (n) => String(n).padStart(2, '0');
@@ -118,8 +118,11 @@
   /* ================================================================ */
   /* WebGL2 context                                                    */
   /* ================================================================ */
-  const gl = canvas.getContext('webgl2', { antialias: true, alpha: false, powerPreference: 'high-performance' });
+  const gl = canvas.getContext('webgl2', { antialias: true, alpha: false, stencil: true, powerPreference: 'high-performance' });
   $('hud-total').textContent = pad(demos.length);
+  const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+  const countWord = (n) => (n <= 20 ? WORDS[n] : n < 100 ? ['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'][Math.floor(n / 10) - 2] + (n % 10 ? '-' + WORDS[n % 10] : '') : String(n));
+  document.querySelector('.wm-sub').innerHTML = `WebGL&nbsp;2.0 / ${countWord(demos.length)} studies`;
 
   if (!gl) {
     status.classList.add('bad');
