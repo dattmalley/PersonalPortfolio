@@ -99,15 +99,16 @@ void main() {
     title: 'Camera Mirror',
     category: 'Sensors & Media',
     hint: 'turn on your camera or drop an image / video onto the stage',
-    description: 'Any video source can be a texture: a webcam via getUserMedia, a dropped image or video file, or the built-in canvas animation. Frames are uploaded only when a new one arrives (requestVideoFrameCallback) and copied into a 48-frame texture-array ring buffer with copyTexSubImage3D. Time warp then samples past frames by distance from the pointer, and Motion colours what got brighter red and what got darker blue.',
-    interact: [['Use camera', 'Your webcam becomes the source (permission prompt)'], ['Drop a file', 'Any image or video dropped on the stage'], ['Move', 'Time warp radiates from the pointer; Motion paints with it'], ['Wave', 'In Motion mode, movement leaves trails']],
-    features: ['texImage2D from HTMLVideoElement / Canvas / ImageBitmap', 'requestVideoFrameCallback', 'copyTexSubImage3D ring buffer', 'sampler2DArray time lookups', 'Frame differencing', 'Sobel edges'],
+    description: 'Any video source can be a texture: a webcam via getUserMedia, a shared screen via getDisplayMedia, an image pasted from the clipboard, a dropped image or video file, or the built-in canvas animation. Frames are uploaded only when a new one arrives (requestVideoFrameCallback) and copied into a 48-frame texture-array ring buffer with copyTexSubImage3D. Time warp then samples past frames by distance from the pointer, and Motion colours what got brighter red and what got darker blue.',
+    interact: [['Use camera', 'Your webcam becomes the source (permission prompt)'], ['Share screen', 'A window, tab or screen via getDisplayMedia'], ['Paste', 'Ctrl/⌘+V an image from the clipboard'], ['Drop a file', 'Any image or video dropped on the stage'], ['Move', 'Time warp radiates from the pointer; Motion paints with it'], ['Wave', 'In Motion mode, movement leaves trails']],
+    features: ['getUserMedia / getDisplayMedia', 'Clipboard paste + drag-and-drop', 'texImage2D from HTMLVideoElement / Canvas / ImageBitmap', 'requestVideoFrameCallback', 'copyTexSubImage3D ring buffer', 'sampler2DArray time lookups', 'Frame differencing', 'Sobel edges'],
     params: [
       { key: 'fx', label: 'Effect', type: 'select', options: EFFECTS, value: 0 },
       { key: 'amount', label: 'Time-warp depth', type: 'range', min: 4, max: 140, step: 1, value: 60 },
       { key: 'decay', label: 'Trail persistence', type: 'range', min: 0.8, max: 0.995, step: 0.001, value: 0.92 },
       { key: 'mirror', label: 'Mirror', type: 'toggle', value: true },
       { key: 'cam', label: 'Use camera', type: 'button' },
+      { key: 'screen', label: 'Share screen', type: 'button' },
       { key: 'synthetic', label: 'Synthetic feed', type: 'button' },
     ],
     init(ctx) {
@@ -147,11 +148,28 @@ void main() {
         }
       };
       stage.addEventListener('dragover', s.onOver); stage.addEventListener('dragleave', s.onLeave); stage.addEventListener('drop', s.onDrop);
+      s.onPaste = (e) => {
+        const item = [...(e.clipboardData ? e.clipboardData.items : [])].find((it) => it.type.startsWith('image/'));
+        if (!item) return;
+        e.preventDefault();
+        createImageBitmap(item.getAsFile()).then((bmp) => { stopStream(s); s.source = { el: bmp, w: bmp.width, h: bmp.height, still: true }; s.kind = 'Pasted image'; s.fresh = true; });
+      };
+      document.addEventListener('paste', s.onPaste);
       s.stage = stage;
       return s;
     },
     action(ctx, s, key) {
       if (key === 'synthetic') { stopStream(s); s.source = s.synth; s.kind = 'synthetic'; }
+      if (key === 'screen') {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) { ctx.message('Screen sharing is not available in this browser.'); setTimeout(() => ctx.message(''), 2500); return; }
+        navigator.mediaDevices.getDisplayMedia({ video: true, audio: false }).then((stream) => {
+          const v = document.createElement('video');
+          v.srcObject = stream; v.muted = true; v.playsInline = true; v.play();
+          useVideo(s, v, 'Shared screen');
+          s.stream = stream;
+          stream.getVideoTracks()[0].addEventListener('ended', () => { if (s.stream === stream) { s.stream = null; s.source = s.synth; s.kind = 'synthetic'; } });
+        }).catch(() => {});
+      }
       if (key === 'cam') {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { ctx.message('Camera access needs HTTPS and a browser that supports getUserMedia.'); setTimeout(() => ctx.message(''), 2500); return; }
         navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 360 }, audio: false }).then((stream) => {
@@ -164,6 +182,7 @@ void main() {
     },
     dispose(ctx, s) {
       stopStream(s);
+      document.removeEventListener('paste', s.onPaste);
       s.stage.removeEventListener('dragover', s.onOver); s.stage.removeEventListener('dragleave', s.onLeave); s.stage.removeEventListener('drop', s.onDrop);
     },
     frame(ctx, s, t, dt) {
@@ -213,7 +232,7 @@ void main() {
       const ptr = input.hover || input.down ? [input.uvx, input.uvy] : [0.5 + 0.3 * Math.sin(t * 0.6), 0.5];
       s.showP.use().set({ u_cur: 0, u_trail: 1, u_hist: 2, u_fx: params.fx, u_head: s.head, u_ptr: ptr, u_res: [ctx.width, ctx.height], u_amount: params.amount });
       ctx.util.drawFullscreen();
-      s.label.textContent = 'source · ' + (s.kind === 'synthetic' ? 'synthetic canvas feed' : s.kind) + ' · drop an image or video to use it';
+      s.label.textContent = 'source · ' + (s.kind === 'synthetic' ? 'synthetic canvas feed' : s.kind) + ' · drop or paste an image / video to use it';
     },
   });
 

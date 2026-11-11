@@ -1,40 +1,60 @@
 # WebGL2 Interaction Lab
 
-A sandbox of 28 interaction and motion studies written in **raw WebGL 2.0**: no libraries and no build step. Open `webgl/index.html` through any static server (or GitHub Pages). Deep-link to a demo with its hash, e.g. `webgl/index.html#particles`.
+A sandbox of 44 interaction and motion studies written in **raw WebGL 2.0**: no libraries and no build step. Open `webgl/index.html` through any static server (or GitHub Pages). The home view shows nine groups as tabs; each group is a masonry grid of study cards (stacked on phones and in portrait), and a card opens the full study. Deep-link to a demo with its hash, e.g. `webgl/index.html#particles`.
 
-| Group | Demo | Interaction / motion | Key WebGL2 features |
-|---|---|---|---|
-| Pointer & Touch | Pointer Field | Eased follower chain, click shockwaves | `gl_VertexID` fullscreen triangle, uniform arrays |
-| | Feedback Paint | Multi-touch painting, decaying trails | Ping-pong render targets, RGBA16F |
-| | Water Ripples | Stir / drop / rain on a wave sim | Half-float simulation |
-| | Jelly Grid | Grab-and-fling soft body | Dynamic buffers, Uint32 indices |
-| | Mesh Painter | Paint onto a 3D model | `PIXEL_PACK_BUFFER`, `fenceSync`, `getBufferSubData` |
-| | X-Ray Lens | Multi-touch lenses revealing an interior | Stencil buffer, `colorMask` |
-| Camera & Navigation | Orbit Camera | Inertial orbit, pinch zoom, pan, gamepad | Uniform Buffer Objects |
-| | Terrain Flight | WASD / gamepad flight, mouse-look | 32-bit indices, uint hashing |
-| | WebXR Room | Inline, stereo preview, immersive VR/AR | WebXR, `XRWebGLLayer`, per-eye viewports |
-| Selection | GPU Picking | Hover outlines, click springs + ripple | MRT, R32UI targets, integer `readPixels` |
-| Simulation | Fluid Simulation | Push ink with any number of pointers | RG16F/R16F targets, Jacobi pressure solve |
-| | Flocking Ribbons | Lead or scatter two flocks | Primitive restart, `drawRangeElements`, `vertexAttribIPointer` |
-| GPU Motion | Instancing Swarm | 200k instances, repel, morph | `drawArraysInstanced`, `gl_InstanceID` |
-| | Transform Feedback Particles | 1M particles | Transform feedback, `RASTERIZER_DISCARD` |
-| Animation | Easing Lab | 8 easing curves + spring | Instanced SDF quads |
-| | Scroll Morph | Wheel-scrubbed morph targets | 8 vertex attributes |
-| | IK Tentacles | Tentacles reach for the pointer | GPU skinning, bone UBO, FABRIK |
-| Rendering | Raymarched SDF | Cursor-as-blob, floor pulses | Ray marching, `blitFramebuffer` |
-| | Volume (3D Texture) | Orbit, clip-plane sweep | `TEXTURE_3D`, `sampler3D` |
-| | Post-Processing Lens | Aberration, glitch, compare | MSAA, `texStorage2D`, `invalidateFramebuffer` |
-| | Shadow Studio | Steer the sun, raise pillars | Depth textures, `sampler2DShadow`, sampler objects |
-| | Texture Arrays & Samplers | Live filtering comparison | `TEXTURE_2D_ARRAY`, `framebufferTextureLayer`, anisotropy |
-| | HDR & Eye Adaptation | Flash and watch exposure adapt | R11F_G11F_B10F, sRGB textures, tone mapping |
-| Performance | Occlusion & Timer Queries | Slide the occluder, god view | Occlusion queries, `EXT_disjoint_timer_query_webgl2` |
-| | Worker Render | Freeze the main thread | OffscreenCanvas in a Web Worker |
-| Sensors & Media | Parallax Tilt | Gyroscope / pointer parallax | DeviceOrientation API |
-| | Audio Reactive | Synth or microphone | Vertex texture fetch, R8 streaming |
-| | Camera Mirror | Webcam / dropped media effects | Video textures, `copyTexSubImage3D` ring buffer |
+| Group | Study | Interaction / technique |
+|---|---|---|
+| Pointer & Touch | Pointer Field | Eased follower chain, shockwaves |
+|  | Feedback Paint | Multi-touch painting, decaying trails |
+|  | Water Ripples | Wave-equation sim |
+|  | Jelly Grid | Grab-and-fling soft body |
+|  | Mesh Painter | Paint onto a 3D model (async readback) |
+|  | X-Ray Lens | Stencil lenses, one per finger |
+|  | Gesture Lab | Drag, fling, pinch, twist, double-tap, long-press |
+|  | Pressure Ink | Pen pressure / tilt / twist / eraser, coalesced events |
+|  | Sculpt | Raise, dig, smooth, pinch clay |
+|  | Hover Distortion | Tilt, liquid warp, RGB split, click to expand |
+| Camera & Navigation | Orbit Camera | Inertial orbit, zoom, pan (UBOs) |
+|  | Terrain Flight | WASD / gamepad flight |
+|  | WebXR Room | Inline, stereo, immersive VR/AR |
+|  | Fractal Zoom | Zoom-to-cursor infinite canvas, emulated 64-bit |
+|  | Globe & Geolocation | Spin, pins, great-circle arcs, locate me |
+|  | Pointer-Lock Walk | Pointer Lock FPS, jump, touch joystick |
+| Selection | GPU Picking | MRT + R32UI ID buffer |
+|  | Marquee & Lasso | Stencil even-odd mask + transform-feedback selection |
+|  | Transform Gizmo | Translate / rotate / scale handles, snap, undo |
+|  | Voxel Builder | DDA ray-march placement, paint, mirror, undo |
+| Simulation | Fluid Simulation | Stable fluids on half-float targets |
+|  | Flocking Ribbons | Boids, primitive restart |
+|  | Physics Playground | Grab & fling, charged shots, tilt gravity, haptics |
+| GPU Motion | Instancing Swarm | 200k instances |
+|  | Transform Feedback Particles | 1M particles |
+|  | Type & Particles | Keyboard text into 30k particles |
+| Animation | Easing Lab | 8 easings + spring |
+|  | Scroll Morph | Wheel-scrubbed morph targets |
+|  | IK Tentacles | GPU skinning + FABRIK |
+|  | Path Follow | Draw a path; arc-length travellers, chase cam |
+|  | Swipe Transitions | Gesture-scrubbed shader transitions |
+|  | Scroll Story | DOM scroll drives a camera spline |
+| Rendering | Raymarched SDF | Ray marching |
+|  | Volume (3D Texture) | TEXTURE_3D |
+|  | Post-Processing Lens | MSAA, mip bloom |
+|  | Shadow Studio | Depth textures, sampler objects |
+|  | Texture Arrays & Samplers | Filtering comparison |
+|  | HDR & Eye Adaptation | R11F_G11F_B10F, tone mapping |
+| Performance | Occlusion & Timer Queries | Async occlusion culling |
+|  | Worker Render | OffscreenCanvas in a worker |
+| Sensors & Media | Parallax Tilt | DeviceOrientation |
+|  | Audio Reactive | Synth / microphone |
+|  | Camera Mirror | Webcam, screen share, paste, drop |
+|  | Voice & MIDI | Web Speech, Web MIDI, keyboard piano |
 
 Not covered (rare or hardware-specific): `OVR_multiview2`, `WEBGL_multi_draw`, `EXT_clip_control`,
 `WEBGL_clip_cull_distance`, compressed texture formats, and `KHR_parallel_shader_compile`.
+
+## Thumbnails
+
+`thumbs/*.jpg` are rendered from the studies themselves via capture mode: `index.html?capture=<id>` draws one study full-window without UI.
 
 ## Structure
 
@@ -44,7 +64,9 @@ webgl/
   style.css         dark theme (red #ff3b4e / blue #3b8bff accents)
   js/core.js        math, geometry, GL resource tracker, orbit camera, unified input
   js/app.js         navigation, auto-generated controls, render loop, context-loss handling
-  js/demos/*.js     one file per demo, each calling Sandbox.register({...})
+  js/demos/*.js     one file per study, each calling Sandbox.register({...})
+  thumbs/           card thumbnails (generated)
+  data/             Natural Earth coastlines for the globe (see LICENSE-world-atlas.txt)
 ```
 
 ## Adding a demo

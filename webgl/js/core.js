@@ -131,7 +131,47 @@ float fbm(vec2 p) {
   const lerp = (a, b, t) => a + (b - a) * t;
   // Frame-rate independent exponential smoothing factor.
   const damp = (rate, dt) => 1 - Math.exp(-rate * dt);
-  Sandbox.math = { V3, M4, clamp, lerp, damp };
+  // Quaternions [x, y, z, w]
+  const Q = {
+    ident: () => [0, 0, 0, 1],
+    axisAngle(ax, a) { const n = V3.norm(ax), s = Math.sin(a / 2); return [n[0] * s, n[1] * s, n[2] * s, Math.cos(a / 2)]; },
+    mul(a, b) {
+      return [
+        a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1],
+        a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0],
+        a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3],
+        a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2],
+      ];
+    },
+    norm(q) { const l = Math.hypot(q[0], q[1], q[2], q[3]) || 1; return q.map((v) => v / l); },
+    slerp(a, b, t) {
+      let d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+      if (d < 0) { b = b.map((v) => -v); d = -d; }
+      if (d > 0.9995) return Q.norm(a.map((v, i) => v + (b[i] - v) * t));
+      const th = Math.acos(d), s = Math.sin(th);
+      const wa = Math.sin((1 - t) * th) / s, wb = Math.sin(t * th) / s;
+      return a.map((v, i) => v * wa + b[i] * wb);
+    },
+    rotate(q, v) { const p = Q.mul(Q.mul(q, [v[0], v[1], v[2], 0]), [-q[0], -q[1], -q[2], q[3]]); return [p[0], p[1], p[2]]; },
+    toMat4(q) {
+      const [x, y, z, w] = q;
+      return new Float32Array([
+        1 - 2 * (y * y + z * z), 2 * (x * y + z * w), 2 * (x * z - y * w), 0,
+        2 * (x * y - z * w), 1 - 2 * (x * x + z * z), 2 * (y * z + x * w), 0,
+        2 * (x * z + y * w), 2 * (y * z - x * w), 1 - 2 * (x * x + y * y), 0,
+        0, 0, 0, 1,
+      ]);
+    },
+  };
+  // Ray helpers
+  const Ray = {
+    plane(o, d, p0, n) { const den = V3.dot(d, n); if (Math.abs(den) < 1e-6) return null; const t = V3.dot(V3.sub(p0, o), n) / den; return t > 0 ? V3.add(o, V3.scale(d, t)) : null; },
+    sphere(o, d, c, r) {
+      const oc = V3.sub(o, c), b = V3.dot(oc, d), cc = V3.dot(oc, oc) - r * r, h = b * b - cc;
+      if (h < 0) return null; const t = -b - Math.sqrt(h); return t > 0 ? t : null;
+    },
+  };
+  Sandbox.math = { V3, M4, Q, Ray, clamp, lerp, damp };
 
   /* ------------------------------------------------------------------ */
   /* Geometry                                                            */
@@ -523,6 +563,94 @@ float fbm(vec2 p) {
     }
   }
   Sandbox.OrbitCam = OrbitCam;
+
+  /* ------------------------------------------------------------------ */
+  /* Non-blocking pixel readback (PIXEL_PACK_BUFFER + fence)              */
+  /* ------------------------------------------------------------------ */
+  class AsyncPick {
+    constructor(ctx, type) {
+      const gl = (this.gl = ctx.gl);
+      this.type = type || gl.FLOAT;
+      this.out = this.type === gl.FLOAT ? new Float32Array(4) : new Uint8Array(4);
+      this.pbo = ctx.util.buffer(gl.PIXEL_PACK_BUFFER, 16, gl.STREAM_READ);
+      gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
+      this.sync = null; this.result = null; this.age = 99;
+    }
+    /** Returns the newest finished result (or null) without ever waiting on the GPU. */
+    poll() {
+      const gl = this.gl;
+      this.age++;
+      if (!this.sync) return this.result;
+      const st = gl.clientWaitSync(this.sync, 0, 0);
+      if (st === gl.ALREADY_SIGNALED || st === gl.CONDITION_SATISFIED) {
+        gl.bindBuffer(gl.PIXEL_PACK_BUFFER, this.pbo);
+        gl.getBufferSubData(gl.PIXEL_PACK_BUFFER, 0, this.out);
+        gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
+        gl.deleteSync(this.sync); this.sync = null;
+        this.result = Array.from(this.out); this.age = 0;
+      } else if (st === gl.WAIT_FAILED) { gl.deleteSync(this.sync); this.sync = null; }
+      return this.result;
+    }
+    /** Queue a read of pixel (x, y) from the currently bound READ framebuffer. */
+    request(x, y) {
+      const gl = this.gl;
+      if (this.sync) return false;
+      gl.bindBuffer(gl.PIXEL_PACK_BUFFER, this.pbo);
+      gl.readPixels(x, y, 1, 1, gl.RGBA, this.type, 0);
+      gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
+      this.sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
+      gl.flush();
+      return true;
+    }
+    dispose() { if (this.sync) this.gl.deleteSync(this.sync); this.sync = null; }
+  }
+  Sandbox.AsyncPick = AsyncPick;
+
+  /* ------------------------------------------------------------------ */
+  /* Poster artwork: six editorial compositions in a 2D texture array     */
+  /* ------------------------------------------------------------------ */
+  Sandbox.POSTER_TITLES = ['Field', 'Signal', 'Orbit', 'Grain', 'Tide', 'Prism'];
+  Sandbox.posters = function (ctx, W = 640, H = 800) {
+    const { gl, util } = ctx;
+    const N = 6;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    const RED = '#ff3b4e', BLUE = '#3b8bff', BONE = '#ece9e2', INK = '#0b0c0e';
+    const tex = util.rawTexture();
+    gl.bindTexture(gl.TEXTURE_2D_ARRAY, tex);
+    const levels = Math.floor(Math.log2(Math.max(W, H))) + 1;
+    gl.texStorage3D(gl.TEXTURE_2D_ARRAY, levels, gl.RGBA8, W, H, N);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+    const rng = (seed) => () => ((seed = Math.imul(seed ^ (seed >>> 15), 2246822507) + 0x6d2b79f5) >>> 0) / 4294967296;
+    for (let i = 0; i < N; i++) {
+      const r = rng(i * 7919 + 13);
+      const bg = i % 3 === 0 ? INK : i % 3 === 1 ? '#121318' : '#16120f';
+      g.fillStyle = bg; g.fillRect(0, 0, W, H);
+      g.save();
+      if (i === 0) { for (let k = 0; k < 18; k++) { g.fillStyle = k % 2 ? RED : BLUE; g.globalAlpha = 0.85; g.fillRect(0, 120 + k * 26, W * (0.2 + r() * 0.8), 10); } }
+      if (i === 1) { g.strokeStyle = BLUE; g.lineWidth = 3; for (let k = 0; k < 14; k++) { g.beginPath(); for (let x = 0; x <= W; x += 8) g.lineTo(x, 330 + Math.sin(x * 0.02 + k * 0.5) * (20 + k * 9) + k * 6); g.stroke(); } g.fillStyle = RED; g.beginPath(); g.arc(W * 0.72, 220, 70, 0, 7); g.fill(); }
+      if (i === 2) { for (let k = 6; k > 0; k--) { g.strokeStyle = k % 2 ? RED : BLUE; g.lineWidth = 2 + k; g.beginPath(); g.ellipse(W / 2, 360, 40 + k * 42, 18 + k * 16, -0.4, 0, 7); g.stroke(); } g.fillStyle = BONE; g.beginPath(); g.arc(W / 2, 360, 34, 0, 7); g.fill(); }
+      if (i === 3) { for (let k = 0; k < 5200; k++) { const x = r() * W, y = 100 + r() * 480; g.fillStyle = r() < 0.5 ? RED : BLUE; g.globalAlpha = r() * 0.8; g.fillRect(x, y, 2, 2); } g.globalAlpha = 1; g.fillStyle = BONE; g.fillRect(W * 0.1, 300, W * 0.8, 3); }
+      if (i === 4) { for (let k = 0; k < 9; k++) { const grd = g.createLinearGradient(0, 0, W, 0); grd.addColorStop(0, BLUE); grd.addColorStop(1, RED); g.fillStyle = grd; g.globalAlpha = 0.12 + k * 0.08; g.beginPath(); g.moveTo(0, 560 - k * 40); for (let x = 0; x <= W; x += 10) g.lineTo(x, 560 - k * 40 + Math.sin(x * 0.012 + k) * 30); g.lineTo(W, H); g.lineTo(0, H); g.fill(); } }
+      if (i === 5) { g.globalCompositeOperation = 'lighter'; const pts = [[W * 0.5, 160], [W * 0.15, 560], [W * 0.85, 560]]; [RED, BLUE, BONE].forEach((col, k) => { g.fillStyle = col; g.globalAlpha = 0.55; g.beginPath(); g.moveTo(pts[k][0], pts[k][1]); g.lineTo(pts[(k + 1) % 3][0] + (k - 1) * 40, pts[(k + 1) % 3][1]); g.lineTo(W / 2, 400); g.fill(); }); }
+      g.restore();
+      g.globalAlpha = 1;
+      g.fillStyle = BONE; g.font = 'italic 150px "Instrument Serif", Georgia, serif'; g.textBaseline = 'alphabetic';
+      g.fillText(String(i + 1).padStart(2, '0'), 36, H - 90);
+      g.font = '500 15px "JetBrains Mono", monospace'; g.fillStyle = 'rgba(236,233,226,0.7)';
+      g.fillText(('STUDY ' + String(i + 1).padStart(2, '0') + ' / ' + Sandbox.POSTER_TITLES[i]).toUpperCase(), 40, 60);
+      g.fillText('WEBGL 2.0', W - 140, 60);
+      g.fillStyle = i % 2 ? BLUE : RED; g.fillRect(40, H - 60, 60, 4);
+      gl.texSubImage3D(gl.TEXTURE_2D_ARRAY, 0, 0, 0, i, W, H, 1, gl.RGBA, gl.UNSIGNED_BYTE, c);
+    }
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+    gl.generateMipmap(gl.TEXTURE_2D_ARRAY);
+    gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D_ARRAY, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.bindTexture(gl.TEXTURE_2D_ARRAY, null);
+    return { tex, count: N, aspect: W / H };
+  };
 
   /* ------------------------------------------------------------------ */
   /* Input: pointer (mouse/pen/touch), multi-touch, pinch, wheel, keys    */

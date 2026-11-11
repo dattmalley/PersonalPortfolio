@@ -42,8 +42,28 @@
     <button class="gn-arrow gn-right" type="button" aria-label="Scroll groups right"><svg><use href="#i-next"/></svg></button>
   </nav>
 
-  <div class="app">
+  <section class="view-grid" id="view-grid" aria-live="polite">
+    <header class="grid-head">
+      <div class="gh-letter" id="gh-letter">A</div>
+      <div class="gh-text">
+        <div class="gh-kicker"><span id="gh-index">Group 01 / 09</span><span id="gh-count">—</span></div>
+        <h1 id="gh-title">—</h1>
+        <p id="gh-desc" class="gh-desc"></p>
+      </div>
+    </header>
+    <div class="masonry" id="masonry"></div>
+    <footer class="grid-foot">
+      <a id="gf-prev" class="gf" href="#"><small>Previous group</small><span></span></a>
+      <a id="gf-next" class="gf next" href="#"><small>Next group</small><span></span></a>
+    </footer>
+  </section>
+
+  <div class="app" id="view-demo">
     <main class="stage-col">
+      <div class="crumbs">
+        <a id="crumb-back" href="#"><svg><use href="#i-prev"/></svg><span id="crumb-group">All studies</span></a>
+        <span class="crumb-pos" id="crumb-pos"></span>
+      </div>
       <div class="stage" id="stage">
         <canvas id="gl" tabindex="0" aria-label="Interactive WebGL canvas"></canvas>
         <div id="overlay" class="overlay"></div>
@@ -134,6 +154,22 @@
   <script src="js/demos/queries.js"></script>
   <script src="js/demos/worker.js"></script>
   <script src="js/demos/camera.js"></script>
+  <script src="js/demos/gestures.js"></script>
+  <script src="js/demos/pressure.js"></script>
+  <script src="js/demos/sculpt.js"></script>
+  <script src="js/demos/hover.js"></script>
+  <script src="js/demos/fractal.js"></script>
+  <script src="js/demos/globe.js"></script>
+  <script src="js/demos/fps.js"></script>
+  <script src="js/demos/lasso.js"></script>
+  <script src="js/demos/gizmo.js"></script>
+  <script src="js/demos/voxels.js"></script>
+  <script src="js/demos/physics.js"></script>
+  <script src="js/demos/typeparticles.js"></script>
+  <script src="js/demos/path.js"></script>
+  <script src="js/demos/transitions.js"></script>
+  <script src="js/demos/scrollstory.js"></script>
+  <script src="js/demos/voice.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

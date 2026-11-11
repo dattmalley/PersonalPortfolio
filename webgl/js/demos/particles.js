@@ -39,7 +39,7 @@ uniform float u_size;
 out vec3 v_col;
 void main() {
   float sp = clamp(length(a_vel) * 1.4, 0.0, 1.0);
-  v_col = mix(BLUE * 0.6, RED, sp) + sp * sp * 0.4;
+  v_col = mix(BLUE, RED, sp) + sp * sp * 0.4;
   gl_Position = vec4(a_pos, 0.0, 1.0);
   gl_PointSize = u_size;
 }`;
@@ -101,7 +101,7 @@ void main() { o = vec4(v_col * u_alpha, 1.0); }`;
       let attract = 0;
       if (input.down) attract = (input.shift || input.button === 2 ? -1 : 1) * params.strength;
       let mx = input.nx, my = input.ny;
-      if (!input.hover && !input.down) { mx = Math.sin(t * 0.6) * 0.5; my = Math.sin(t * 0.9) * 0.4; attract = 0.35 * params.strength; }
+      if (!input.hover && !input.down) { mx = Math.sin(t * 0.6) * 0.5; my = Math.sin(t * 0.9) * 0.4; attract = 0.8 * params.strength; }
       s.mouse = [mx, my];
       const dst = 1 - s.src;
       // --- simulate ---
@@ -125,8 +125,8 @@ void main() { o = vec4(v_col * u_alpha, 1.0); }`;
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.ONE, gl.ONE);
-      const alpha = Math.min(0.6, 110000 / s.n) * (params.size > 1.5 ? 0.6 : 1);
-      s.draw.use().set({ u_size: params.size * ctx.dpr * 0.75, u_alpha: alpha });
+      const alpha = Math.min(0.7, 150000 / s.n) * (params.size > 1.5 ? 0.6 : 1);
+      s.draw.use().set({ u_size: Math.max(1, params.size * ctx.dpr * 0.75), u_alpha: alpha });
       gl.bindVertexArray(s.vaos[s.src]);
       gl.drawArrays(gl.POINTS, 0, s.n);
       gl.disable(gl.BLEND);
