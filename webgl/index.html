@@ -3,77 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A sandbox of interaction and motion techniques built with raw WebGL 2.0.">
+  <meta name="description" content="Sixteen interaction and motion studies built with raw WebGL 2.0.">
+  <meta name="theme-color" content="#060708">
   <title>WebGL2 Interaction Lab</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="#" aria-label="WebGL2 Interaction Lab home">
-      <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
-      <span class="brand-text">WebGL2 <b>Interaction Lab</b></span>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-prev" viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+    <symbol id="i-next" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 16 16"><path d="M5.5 3.5v9M10.5 3.5v9" stroke="currentColor" stroke-width="1.6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 16 16"><path d="M5 3.2v9.6L12.5 8z" fill="currentColor"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 16 16"><path d="M3.2 8a4.8 4.8 0 1 0 1.4-3.4M3.5 2.5v2.6h2.6" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+    <symbol id="i-full" viewBox="0 0 16 16"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  </svg>
+
+  <header class="masthead">
+    <a class="wordmark" href="#" aria-label="WebGL2 Interaction Lab">
+      <span class="mark" aria-hidden="true"><i></i><i></i></span>
+      <span class="wm-text">Interaction <em>Lab</em></span>
+      <span class="wm-sub">WebGL&nbsp;2.0 / sixteen studies</span>
     </a>
-    <div class="topbar-meta">
-      <span class="pill" id="gl-status">checking WebGL2…</span>
-      <a class="back-link" href="../index.html">← Portfolio</a>
+    <div class="mast-meta">
+      <span class="status" id="gl-status"><i></i><span>Checking context</span></span>
+      <a class="back" href="../index.html">Portfolio <span aria-hidden="true">↗</span></a>
     </div>
   </header>
 
-  <div class="app">
-    <aside class="sidebar" aria-label="Demo list">
-      <div class="search-wrap">
-        <input id="search" type="search" placeholder="Filter demos…" autocomplete="off" aria-label="Filter demos">
-      </div>
-      <nav id="demo-nav"></nav>
-    </aside>
+  <nav class="groupnav" id="groupnav" aria-label="Demos by group">
+    <button class="gn-arrow gn-left" type="button" aria-label="Scroll groups left"><svg><use href="#i-prev"/></svg></button>
+    <div class="gn-scroller" id="gn-scroller">
+      <div class="gn-track" id="gn-track"></div>
+      <span class="gn-indicator" id="gn-indicator" aria-hidden="true"></span>
+    </div>
+    <button class="gn-arrow gn-right" type="button" aria-label="Scroll groups right"><svg><use href="#i-next"/></svg></button>
+  </nav>
 
-    <main class="stage-wrap">
+  <div class="app">
+    <main class="stage-col">
       <div class="stage" id="stage">
         <canvas id="gl" tabindex="0" aria-label="Interactive WebGL canvas"></canvas>
         <div id="overlay" class="overlay"></div>
         <div id="message" class="message" hidden></div>
+        <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
+        <div class="scan" id="scan" aria-hidden="true"></div>
+
         <div class="hud hud-top">
-          <span class="hud-title" id="hud-title">—</span>
-          <span class="hud-fps"><b id="fps">0</b> fps</span>
+          <div class="hud-id"><span id="hud-num">01</span><span class="sep">/</span><span id="hud-total">16</span><span class="hud-name" id="hud-title">—</span></div>
+          <div class="hud-read">
+            <span class="readout"><b>x</b><span id="rd-x">0.000</span></span>
+            <span class="readout"><b>y</b><span id="rd-y">0.000</span></span>
+            <span class="readout fps"><canvas id="spark" width="72" height="18" aria-hidden="true"></canvas><span id="fps">0</span><small>fps</small></span>
+          </div>
         </div>
         <div class="hud hud-bottom">
           <span class="hud-hint" id="hud-hint"></span>
           <div class="toolbar">
-            <button class="tool" id="btn-prev" title="Previous demo ( [ )" aria-label="Previous demo">‹</button>
-            <button class="tool" id="btn-pause" title="Pause / resume" aria-label="Pause">❚❚</button>
-            <button class="tool" id="btn-reset" title="Restart demo" aria-label="Restart demo">↻</button>
-            <button class="tool" id="btn-full" title="Fullscreen" aria-label="Fullscreen">⤢</button>
-            <button class="tool" id="btn-next" title="Next demo ( ] )" aria-label="Next demo">›</button>
+            <button class="tool" id="btn-prev" title="Previous demo  [" aria-label="Previous demo"><svg><use href="#i-prev"/></svg></button>
+            <button class="tool" id="btn-pause" title="Pause / resume" aria-label="Pause"><svg><use href="#i-pause"/></svg></button>
+            <button class="tool" id="btn-reset" title="Restart demo" aria-label="Restart demo"><svg><use href="#i-reset"/></svg></button>
+            <button class="tool" id="btn-full" title="Fullscreen" aria-label="Fullscreen"><svg><use href="#i-full"/></svg></button>
+            <button class="tool" id="btn-next" title="Next demo  ]" aria-label="Next demo"><svg><use href="#i-next"/></svg></button>
           </div>
         </div>
       </div>
     </main>
 
-    <aside class="panel" aria-label="Demo details and controls">
-      <section class="card">
-        <div class="eyebrow" id="info-cat">—</div>
+    <aside class="sheet" aria-label="Demo details and controls">
+      <div class="sheet-head">
+        <div class="numeral" id="info-num">01</div>
+        <div class="sheet-kicker"><span id="info-letter">A</span><span id="info-cat">—</span></div>
         <h1 id="info-title">—</h1>
-        <p id="info-desc" class="desc"></p>
+        <p id="info-desc" class="lede"></p>
+      </div>
+
+      <section class="sect">
+        <h2><span>01</span>Interact</h2>
+        <dl id="info-interact" class="interact"></dl>
       </section>
-      <section class="card">
-        <h2>Interact</h2>
-        <ul id="info-interact" class="interact"></ul>
-      </section>
-      <section class="card">
-        <h2>Controls</h2>
+      <section class="sect">
+        <h2><span>02</span>Parameters</h2>
         <div id="controls" class="controls"></div>
       </section>
-      <section class="card">
-        <h2>WebGL2 features used</h2>
-        <div id="info-features" class="chips"></div>
+      <section class="sect">
+        <h2><span>03</span>Pipeline</h2>
+        <ol id="info-features" class="pipeline"></ol>
       </section>
-      <details class="card caps">
-        <summary>Device capabilities</summary>
-        <dl id="caps"></dl>
+      <details class="sect device">
+        <summary><h2><span>04</span>Device</h2><span class="plus" aria-hidden="true"></span></summary>
+        <dl id="caps" class="caps"></dl>
       </details>
+
+      <div class="pager">
+        <a id="pg-prev" class="pg" href="#"><small>Previous</small><span></span></a>
+        <a id="pg-next" class="pg next" href="#"><small>Next</small><span></span></a>
+      </div>
+      <p class="colophon">Raw WebGL&nbsp;2.0, no libraries. Keys <kbd>[</kbd> <kbd>]</kbd> step through studies.</p>
     </aside>
   </div>
 

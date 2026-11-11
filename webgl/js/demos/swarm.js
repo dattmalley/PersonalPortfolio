@@ -103,11 +103,7 @@ void main() {
       s.morph += (s.target - s.morph) * damp(2.2, dt);
       if (Math.abs(s.target - s.morph) < 1e-3) s.morph = s.target;
       const shown = ((Math.round(s.target) % 4) + 4) % 4;
-      if (ctx.params.formation !== shown) {
-        ctx.params.formation = shown;
-        const sel = document.getElementById('ctl-formation');
-        if (sel) sel.value = shown;
-      }
+      if (ctx.params.formation !== shown) ctx.syncParam('formation', shown);
       // pointer ray → plane through origin facing camera
       const r = s.cam.ray(input.nx, input.ny, ctx.aspect);
       const b = s.cam.basis();

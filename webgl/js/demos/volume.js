@@ -105,9 +105,7 @@ void main() {
       const { gl, input, params } = ctx;
       s.cam.update(input, dt, false);
       if (input.keys.has('ArrowLeft') || input.keys.has('ArrowRight')) {
-        params.slice = Math.max(-1, Math.min(1.01, params.slice + (input.keys.has('ArrowRight') ? 1 : -1) * dt));
-        const el = document.getElementById('ctl-slice');
-        if (el) { el.value = params.slice; el.dispatchEvent(new Event('input')); }
+        ctx.syncParam('slice', Math.max(-1, Math.min(1.01, params.slice + (input.keys.has('ArrowRight') ? 1 : -1) * dt)));
       }
       gl.viewport(0, 0, ctx.width, ctx.height);
       gl.activeTexture(gl.TEXTURE0);

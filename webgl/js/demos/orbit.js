@@ -19,7 +19,7 @@ layout(location = 2) in vec2 a_uv;
 out vec3 v_n; out vec3 v_w; out vec2 v_uv;
 void main() {
   float t = u_eye.w;
-  vec3 p = a_pos + a_nrm * 0.03 * sin(a_uv.x * 60.0 - t * 3.0);
+  vec3 p = a_pos + a_nrm * 0.03 * sin(a_uv.x * 62.831853 - t * 3.0); // 10 whole periods: seamless at u=0/1
   v_n = a_nrm; v_w = p; v_uv = a_uv;
   gl_Position = u_proj * u_view * vec4(p, 1.0);
 }`;
