@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <radialGradient id="r" cx="35%" cy="40%" r="45%"><stop offset="0" stop-color="#ff3b4e" stop-opacity=".9"/><stop offset="1" stop-color="#ff3b4e" stop-opacity="0"/></radialGradient>
+    <radialGradient id="b" cx="65%" cy="62%" r="45%"><stop offset="0" stop-color="#3b8bff" stop-opacity=".9"/><stop offset="1" stop-color="#3b8bff" stop-opacity="0"/></radialGradient>
+    <pattern id="g" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#232838" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="400" height="400" fill="#07080c"/>
+  <rect width="400" height="400" fill="url(#g)"/>
+  <rect width="400" height="400" fill="url(#r)" style="mix-blend-mode:screen"/>
+  <rect width="400" height="400" fill="url(#b)" style="mix-blend-mode:screen"/>
+  <g fill="none" stroke-width="3">
+    <ellipse cx="200" cy="200" rx="120" ry="48" stroke="#ff3b4e" transform="rotate(-25 200 200)"/>
+    <ellipse cx="200" cy="200" rx="120" ry="48" stroke="#3b8bff" transform="rotate(25 200 200)"/>
+  </g>
+  <circle cx="200" cy="200" r="26" fill="#e6e9f2"/>
+  <text x="200" y="350" fill="#e6e9f2" font-family="monospace" font-size="26" text-anchor="middle" letter-spacing="4">WEBGL2</text>
+</svg>

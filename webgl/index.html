@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A sandbox of interaction and motion techniques built with raw WebGL 2.0.">
+  <title>WebGL2 Interaction Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="WebGL2 Interaction Lab home">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i></span>
+      <span class="brand-text">WebGL2 <b>Interaction Lab</b></span>
+    </a>
+    <div class="topbar-meta">
+      <span class="pill" id="gl-status">checking WebGL2…</span>
+      <a class="back-link" href="../index.html">← Portfolio</a>
+    </div>
+  </header>
+
+  <div class="app">
+    <aside class="sidebar" aria-label="Demo list">
+      <div class="search-wrap">
+        <input id="search" type="search" placeholder="Filter demos…" autocomplete="off" aria-label="Filter demos">
+      </div>
+      <nav id="demo-nav"></nav>
+    </aside>
+
+    <main class="stage-wrap">
+      <div class="stage" id="stage">
+        <canvas id="gl" tabindex="0" aria-label="Interactive WebGL canvas"></canvas>
+        <div id="overlay" class="overlay"></div>
+        <div id="message" class="message" hidden></div>
+        <div class="hud hud-top">
+          <span class="hud-title" id="hud-title">—</span>
+          <span class="hud-fps"><b id="fps">0</b> fps</span>
+        </div>
+        <div class="hud hud-bottom">
+          <span class="hud-hint" id="hud-hint"></span>
+          <div class="toolbar">
+            <button class="tool" id="btn-prev" title="Previous demo ( [ )" aria-label="Previous demo">‹</button>
+            <button class="tool" id="btn-pause" title="Pause / resume" aria-label="Pause">❚❚</button>
+            <button class="tool" id="btn-reset" title="Restart demo" aria-label="Restart demo">↻</button>
+            <button class="tool" id="btn-full" title="Fullscreen" aria-label="Fullscreen">⤢</button>
+            <button class="tool" id="btn-next" title="Next demo ( ] )" aria-label="Next demo">›</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="panel" aria-label="Demo details and controls">
+      <section class="card">
+        <div class="eyebrow" id="info-cat">—</div>
+        <h1 id="info-title">—</h1>
+        <p id="info-desc" class="desc"></p>
+      </section>
+      <section class="card">
+        <h2>Interact</h2>
+        <ul id="info-interact" class="interact"></ul>
+      </section>
+      <section class="card">
+        <h2>Controls</h2>
+        <div id="controls" class="controls"></div>
+      </section>
+      <section class="card">
+        <h2>WebGL2 features used</h2>
+        <div id="info-features" class="chips"></div>
+      </section>
+      <details class="card caps">
+        <summary>Device capabilities</summary>
+        <dl id="caps"></dl>
+      </details>
+    </aside>
+  </div>
+
+  <script src="js/core.js"></script>
+  <script src="js/demos/pointer-field.js"></script>
+  <script src="js/demos/feedback-paint.js"></script>
+  <script src="js/demos/water.js"></script>
+  <script src="js/demos/jelly.js"></script>
+  <script src="js/demos/orbit.js"></script>
+  <script src="js/demos/terrain.js"></script>
+  <script src="js/demos/picking.js"></script>
+  <script src="js/demos/swarm.js"></script>
+  <script src="js/demos/particles.js"></script>
+  <script src="js/demos/easing.js"></script>
+  <script src="js/demos/morph.js"></script>
+  <script src="js/demos/raymarch.js"></script>
+  <script src="js/demos/volume.js"></script>
+  <script src="js/demos/postfx.js"></script>
+  <script src="js/demos/parallax.js"></script>
+  <script src="js/demos/audio.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
