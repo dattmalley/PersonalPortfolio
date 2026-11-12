@@ -14,6 +14,7 @@ A sandbox of 50 interaction and motion studies written in **raw WebGL 2.0**: no 
 |  | Pressure Ink | Pen pressure / tilt / twist / eraser, coalesced events |
 |  | Sculpt | Raise, dig, smooth, pinch clay |
 |  | Hover Distortion | Tilt, liquid warp, RGB split, click to expand |
+|  | Radial Menu | Right-click / long-press marking menus, nested submenu |
 | Camera & Navigation | Orbit Camera | Inertial orbit, zoom, pan (UBOs) |
 |  | Terrain Flight | WASD / gamepad flight |
 |  | WebXR Room | Inline, stereo, immersive VR/AR |
@@ -24,6 +25,9 @@ A sandbox of 50 interaction and motion studies written in **raw WebGL 2.0**: no 
 |  | Marquee & Lasso | Stencil even-odd mask + transform-feedback selection |
 |  | Transform Gizmo | Translate / rotate / scale handles, snap, undo |
 |  | Voxel Builder | DDA ray-march placement, paint, mirror, undo |
+|  | Data Viz Explorer | Tooltips, brushing & linking, legend filters, re-sorting |
+|  | Node Graph Shader | Wire nodes → runtime GLSL (KHR_parallel_shader_compile) |
+|  | Instrument Panel | GPU-drawn knobs, faders, XY pad, colour wheel; keyboard focus |
 | Simulation | Fluid Simulation | Stable fluids on half-float targets |
 |  | Flocking Ribbons | Boids, primitive restart |
 |  | Physics Playground | Grab & fling, charged shots, tilt gravity, haptics |
@@ -36,6 +40,7 @@ A sandbox of 50 interaction and motion studies written in **raw WebGL 2.0**: no 
 |  | Path Follow | Draw a path; arc-length travellers, chase cam |
 |  | Swipe Transitions | Gesture-scrubbed shader transitions |
 |  | Scroll Story | DOM scroll drives a camera spline |
+|  | Curve Editor | Bézier handles, de Casteljau insert, curvature comb, copy SVG |
 | Rendering | Raymarched SDF | Ray marching |
 |  | Volume (3D Texture) | TEXTURE_3D |
 |  | Post-Processing Lens | MSAA, mip bloom |
@@ -48,9 +53,10 @@ A sandbox of 50 interaction and motion studies written in **raw WebGL 2.0**: no 
 |  | Audio Reactive | Synth / microphone |
 |  | Camera Mirror | Webcam, screen share, paste, drop |
 |  | Voice & MIDI | Web Speech, Web MIDI, keyboard piano |
+|  | Spatial Audio | HRTF PannerNodes; the listener follows the camera |
 
 Not covered (rare or hardware-specific): `OVR_multiview2`, `WEBGL_multi_draw`, `EXT_clip_control`,
-`WEBGL_clip_cull_distance`, compressed texture formats, and `KHR_parallel_shader_compile`.
+`WEBGL_clip_cull_distance` and compressed texture formats.
 
 ## Thumbnails
 
