@@ -1,6 +1,6 @@
 # WebGL2 Interaction Lab
 
-A sandbox of 44 interaction and motion studies written in **raw WebGL 2.0**: no libraries and no build step. Open `webgl/index.html` through any static server (or GitHub Pages). The home view shows nine groups as tabs; each group is a masonry grid of study cards (stacked on phones and in portrait), and a card opens the full study. Deep-link to a demo with its hash, e.g. `webgl/index.html#particles`.
+A sandbox of 50 interaction and motion studies written in **raw WebGL 2.0**: no libraries and no build step. Open `webgl/index.html` through any static server (or GitHub Pages). The home view shows nine groups as tabs; each group is a masonry grid of study cards (stacked on phones and in portrait). Clicking a card's thumbnail makes that study live and interactive in place; clicking outside it, pressing Esc or scrolling it away stops it. "Open full study" opens the full view with controls. Every study has screenshot (PNG) and record (WebM) buttons. Deep-link to a demo with its hash, e.g. `webgl/index.html#particles`.
 
 | Group | Study | Interaction / technique |
 |---|---|---|

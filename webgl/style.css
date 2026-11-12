@@ -483,8 +483,37 @@ body.mode-grid .groupnav { position: sticky; top: 0; z-index: 30; }
 
 /* ---------------------------------------------------------------- capture mode (thumbnails) */
 body.capture .masthead, body.capture .groupnav, body.capture .sheet, body.capture .hud, body.capture .crop,
-body.capture .crumbs, body.capture .view-grid, body.capture .scan, body.capture .overlay > :not(canvas), body.capture .message { display: none !important; }
+body.capture .crumbs, body.capture .view-grid, body.capture .scan, body.capture .overlay > :not(canvas):not(.cap-keep), body.capture .message { display: none !important; }
 body.capture::after { display: none; }
 body.capture .app { display: block; height: 100vh; }
 body.capture .stage-col { padding: 0; height: 100vh; }
 body.capture .stage { outline: 0; height: 100vh; }
+
+/* ---------------------------------------------------------------- click-to-interact cards */
+.card-media { cursor: pointer; }
+.card-play {
+  position: absolute; right: 12px; bottom: 12px; z-index: 1; display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--text);
+  padding: 6px 10px; background: rgba(6, 7, 8, .72); outline: 1px solid var(--rule-2); backdrop-filter: blur(6px);
+  opacity: 0; transform: translateY(4px); transition: opacity .25s, transform .35s var(--ease);
+}
+.card-play i { width: 0; height: 0; border-left: 7px solid var(--red); border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent; }
+.card:hover .card-play, .card-media:focus-visible .card-play { opacity: 1; transform: none; }
+@media (hover: none) { .card-play { opacity: 1; transform: none; } }
+.card-live { display: none; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--red); }
+.card-live i { width: 6px; height: 6px; border-radius: 50%; background: var(--red); animation: livepulse 1.2s ease-in-out infinite; }
+@keyframes livepulse { 50% { opacity: .25; } }
+.card.live { outline-color: var(--red); }
+.card.live .card-live { display: flex; }
+.card.live .card-play, .card.live .card-num, .card.live .card-media::after { display: none; }
+.card.live .card-media { cursor: default; }
+.card-body { color: inherit; }
+/* the shared stage when it lives inside a card */
+.stage.inline { position: absolute; inset: 0; z-index: 2; outline: none; border-radius: 0; box-shadow: none; }
+.stage.inline::before { display: none; }
+.stage.inline .hud { padding: 12px 18px; }
+.stage.inline .hud-name, .stage.inline .hud-hint, .stage.inline .readout:not(.fps), .stage.inline .hud-id { display: none; }
+.stage.inline #btn-prev, .stage.inline #btn-next, .stage.inline #btn-pause { display: none; }
+.stage.inline .crop { display: none; }
+.stage.inline .tool { width: 32px; height: 30px; }
+#btn-rec.on { color: var(--red); animation: livepulse 1.2s ease-in-out infinite; }

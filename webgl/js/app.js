@@ -11,7 +11,7 @@
   const GROUPS = [
     { name: 'Pointer & Touch', desc: 'Hover, press, drag, multi-touch, pen pressure and gestures: the ways a hand reaches into the canvas.' },
     { name: 'Camera & Navigation', desc: 'Orbiting, flying, walking, zooming without limit, and stepping into virtual reality.' },
-    { name: 'Selection', desc: 'Picking, marquee and lasso selection, transform gizmos and building block by block.' },
+    { name: 'Selection', desc: 'Picking, lasso and brushing, gizmos, voxels, node graphs and GPU-drawn controls: the direct-manipulation tools of editors.' },
     { name: 'Simulation', desc: 'Fluids, flocks and rigid bodies: motion that emerges from rules rather than keyframes.' },
     { name: 'GPU Motion', desc: 'Hundreds of thousands of moving things, simulated and drawn without the CPU touching them.' },
     { name: 'Animation', desc: 'Easing, morphing, skeletons, paths, transitions and scroll-driven storytelling.' },
@@ -120,6 +120,49 @@
   }
   new ResizeObserver(() => { if (document.body.classList.contains('mode-grid')) layoutMasonry(); }).observe(masonry);
 
+  /* ---- click-to-interact: the single GL stage moves into the live card ---- */
+  let inline = null;
+  const stageHome = { parent: null, next: null };
+  const liveObserver = new IntersectionObserver((entries) => {
+    for (const e of entries) if (inline && e.target === inline.media && e.intersectionRatio < 0.15) deactivateInline();
+  }, { threshold: [0, 0.15, 0.5] });
+  function activateInline(card) {
+    if (!gl || (inline && inline.card === card)) return;
+    deactivateInline();
+    const d = demos.find((x) => x.id === card.dataset.id);
+    if (!d) return;
+    const media = card.querySelector('.card-media');
+    stageHome.parent = stage.parentNode; stageHome.next = stage.nextSibling;
+    media.appendChild(stage);
+    stage.classList.add('inline');
+    card.classList.add('live');
+    inline = { card, media, d };
+    liveObserver.observe(media);
+    requestAnimationFrame(() => { if (inline && inline.d === d) { startDemo(d); canvas.focus({ preventScroll: true }); } });
+  }
+  function deactivateInline() {
+    if (!inline) return;
+    const g = gIndex(inline.d);
+    liveObserver.unobserve(inline.media);
+    stopDemo(); current = null;
+    inline.card.classList.remove('live');
+    stage.classList.remove('inline');
+    if (document.fullscreenElement === stage) document.exitFullscreen().catch(() => {});
+    if (stageHome.parent) stageHome.parent.insertBefore(stage, stageHome.next && stageHome.next.parentNode === stageHome.parent ? stageHome.next : null);
+    inline = null;
+    if (document.body.classList.contains('mode-grid')) document.title = `${GNAMES[g]} · WebGL2 Interaction Lab`;
+  }
+  masonry.addEventListener('click', (e) => {
+    const media = e.target.closest('.card-media');
+    if (media && !media.closest('.card').classList.contains('live')) { e.preventDefault(); activateInline(media.closest('.card')); }
+  });
+  masonry.addEventListener('keydown', (e) => {
+    const media = e.target.closest && e.target.closest('.card-media');
+    if (media && (e.key === 'Enter' || e.key === ' ') && e.target === media) { e.preventDefault(); activateInline(media.closest('.card')); }
+  });
+  // any press outside the live card stops it
+  document.addEventListener('pointerdown', (e) => { if (inline && !inline.card.contains(e.target)) deactivateInline(); }, true);
+
   function renderGrid(gi) {
     const g = GROUPS[gi], list = inGroup(gi);
     $('gh-letter').textContent = LETTERS[gi];
@@ -127,22 +170,25 @@
     $('gh-count').textContent = `${pad(list.length)} ${list.length === 1 ? 'study' : 'studies'}`;
     $('gh-title').innerHTML = titleHTML(g.name);
     $('gh-desc').textContent = g.desc;
+    deactivateInline();
     masonry.innerHTML = list.map((d, i) => `
-      <a class="card" href="#${d.id}" style="--ar:${SHAPES[shapeOf(d)]};--i:${i}" aria-label="${esc(d.title)}">
-        <div class="card-media">
+      <article class="card" data-id="${d.id}" style="--ar:${SHAPES[shapeOf(d)]};--i:${i}">
+        <div class="card-media" role="button" tabindex="0" aria-label="Interact with ${esc(d.title)} here">
           <div class="ph"></div>
           <img src="thumbs/${d.id}.jpg" alt="" loading="lazy" decoding="async" onerror="this.remove()">
           <span class="card-crop a"></span><span class="card-crop b"></span>
           <span class="card-num">${numOf(d)}</span>
+          <span class="card-play"><i></i>Click to interact</span>
         </div>
-        <div class="card-body">
+        <a class="card-body" href="#${d.id}" aria-label="Open ${esc(d.title)} full study">
+          <div class="card-live"><i></i>Live · click outside or press Esc to stop</div>
           <div class="card-kicker"><span>${LETTERS[gi]} · ${esc(g.name)}</span><span>${numOf(d)} / ${pad(demos.length)}</span></div>
           <h3>${titleHTML(d.title)}</h3>
           <p>${esc(d.summary || firstSentence(d.description))}</p>
           <ul class="card-tags">${(d.features || []).slice(0, 3).map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
-          <div class="card-cta"><span>${esc((d.hint || '').split('·')[0].trim() || 'Open study')}</span><i>Open →</i></div>
-        </div>
-      </a>`).join('');
+          <div class="card-cta"><span>${esc((d.hint || '').split('·')[0].trim() || 'Open study')}</span><i>Open full study →</i></div>
+        </a>
+      </article>`).join('');
     const prev = (gi - 1 + GROUPS.length) % GROUPS.length, next = (gi + 1) % GROUPS.length;
     $('gf-prev').href = '#g-' + slug(GNAMES[prev]); $('gf-prev').querySelector('span').textContent = '← ' + GNAMES[prev];
     $('gf-next').href = '#g-' + slug(GNAMES[next]); $('gf-next').querySelector('span').textContent = GNAMES[next] + ' →';
@@ -344,6 +390,7 @@
     const h = location.hash.replace('#', '');
     const d = demos.find((x) => x.id === h);
     if (d) {
+      deactivateInline();
       document.body.classList.remove('mode-grid'); document.body.classList.add('mode-demo');
       setActiveGroup(gIndex(d));
       window.scrollTo(0, 0);
@@ -352,6 +399,7 @@
     }
     let gi = GROUPS.findIndex((g) => 'g-' + slug(g.name) === h);
     if (gi < 0) gi = current ? gIndex(current) : 0;
+    deactivateInline();
     stopDemo(); current = null;
     document.body.classList.remove('mode-demo'); document.body.classList.add('mode-grid');
     setActiveGroup(gi);
@@ -378,13 +426,36 @@
     pauseBtn.querySelector('use').setAttribute('href', paused ? '#i-play' : '#i-pause');
     pauseBtn.setAttribute('aria-label', paused ? 'Resume' : 'Pause');
   });
+  // Canvas output: PNG snapshot (shared on mobile when supported) and WebM recording.
+  let wantShot = false, recorder = null;
+  const saveBlob = (blob, name) => {
+    const file = new File([blob], name, { type: blob.type });
+    if (navigator.canShare && navigator.canShare({ files: [file] }) && matchMedia('(pointer: coarse)').matches) { navigator.share({ files: [file], title: name }).catch(() => {}); return; }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  };
+  $('btn-shot').addEventListener('click', () => { wantShot = true; });
+  const recBtn = $('btn-rec');
+  recBtn.addEventListener('click', () => {
+    if (recorder) { recorder.stop(); return; }
+    if (!canvas.captureStream || !window.MediaRecorder) { showMessage('Recording is not supported in this browser.'); setTimeout(() => showMessage(''), 2200); return; }
+    const type = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4'].find((t) => MediaRecorder.isTypeSupported(t)) || '';
+    const chunks = [];
+    recorder = new MediaRecorder(canvas.captureStream(60), type ? { mimeType: type, videoBitsPerSecond: 8e6 } : undefined);
+    recorder.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+    recorder.onstop = () => { saveBlob(new Blob(chunks, { type: recorder.mimeType }), `${current ? current.id : 'study'}.${(recorder.mimeType || '').includes('mp4') ? 'mp4' : 'webm'}`); recorder = null; recBtn.classList.remove('on'); };
+    recorder.start(); recBtn.classList.add('on');
+    setTimeout(() => recorder && recorder.state === 'recording' && recorder.stop(), 30000);
+  });
   $('btn-full').addEventListener('click', () => {
     if (document.fullscreenElement) document.exitFullscreen();
     else if (stage.requestFullscreen) stage.requestFullscreen().catch(() => {});
   });
   window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && inline && !document.pointerLockElement) { deactivateInline(); return; }
     if (e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
     if (current && current.captureKeys) return; // e.g. typing demos own the keyboard
+    if (inline) return; // live cards keep the keyboard to themselves
     if (e.key === '[') step(-1);
     else if (e.key === ']') step(1);
     else if (e.key === 'Escape' && document.body.classList.contains('mode-demo') && !document.pointerLockElement && current) location.hash = 'g-' + slug(current.category);
@@ -428,6 +499,7 @@
     if (!paused && state && !gl.isContextLost()) {
       time += dt; ctx.time = time;
       try { current.frame(ctx, state, time, dt); } catch (err) { fail(err); }
+      if (wantShot) { wantShot = false; const id = current.id; canvas.toBlob((b) => b && saveBlob(b, `${id}.png`), 'image/png'); } // same task as the draw, so the buffer is intact
       if (CAPTURE && ++captureFrames === 1) window.__captureStarted = true;
     }
     input.endFrame();
