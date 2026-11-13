@@ -108,22 +108,21 @@
         </div>
       </a>
 
-      <div class="lab soon" style="--a1:#38d6e8;--a2:#ff4fa3" aria-disabled="true">
-        <div class="art">
-          <svg viewBox="0 0 200 160" fill="none" stroke-width="1.2">
-            <path d="M100 18 L178 140 H22 Z" stroke="#38d6e8"/>
-            <path d="M100 18 L130 140 M100 18 L70 140 M22 140 L139 79 M178 140 L61 79" stroke="#ff4fa3" opacity=".6"/>
-            <circle cx="100" cy="18" r="3" fill="#38d6e8"/><circle cx="178" cy="140" r="3" fill="#ff4fa3"/><circle cx="22" cy="140" r="3" fill="#ece9e2"/>
-          </svg>
+      <a class="lab" href="webgl1/" style="--a1:#38d6e8;--a2:#ff4fa3">
+        <div class="art mosaic">
+          <img src="webgl1/thumbs/frag-depth.jpg" alt="" loading="lazy">
+          <img src="webgl1/thumbs/reaction-diffusion.jpg" alt="" loading="lazy">
+          <img src="webgl1/thumbs/bloom.jpg" alt="" loading="lazy">
+          <img src="webgl1/thumbs/vao.jpg" alt="" loading="lazy">
         </div>
         <div class="body">
-          <div class="row"><span class="pill"><i></i>Next in build</span><span class="swatch"><i></i><i></i></span></div>
+          <div class="row"><span class="pill"><i></i>Live · 61 studies</span><span class="swatch"><i></i><i></i></span></div>
           <h2>WebGL <em>1.0</em></h2>
-          <p>The original GPU pipeline: shaders, buffers, textures, blending, framebuffers and every extension that WebGL 1 can reach.</p>
-          <div class="tags"><span>GLSL ES 1.0</span><span>Extensions</span><span>FBO</span><span>Stencil</span></div>
-          <span class="go">In progress</span>
+          <p>The pipeline, GLSL ES 1.00, textures, framebuffers, fragment operations, every extension, the context itself, GPGPU and rendering techniques. Raw WebGL, no libraries.</p>
+          <div class="tags"><span>GLSL ES 1.00</span><span>Extensions</span><span>FBO</span><span>Stencil</span><span>Instancing</span><span>GPGPU</span></div>
+          <span class="go">Enter lab <b>→</b></span>
         </div>
-      </div>
+      </a>
 
       <div class="lab soon" style="--a1:#a98bff;--a2:#ff7a59" aria-disabled="true">
         <div class="art">
@@ -135,17 +134,17 @@
           </svg>
         </div>
         <div class="body">
-          <div class="row"><span class="pill"><i></i>Queued</span><span class="swatch"><i></i><i></i></span></div>
+          <div class="row"><span class="pill"><i></i>Next in build</span><span class="swatch"><i></i><i></i></span></div>
           <h2>Canvas <em>2D</em></h2>
           <p>Paths, gradients, compositing, pixel manipulation, text, transforms, OffscreenCanvas and every drawing primitive in the 2D context.</p>
           <div class="tags"><span>Path2D</span><span>ImageData</span><span>Compositing</span><span>Filters</span></div>
-          <span class="go">Queued</span>
+          <span class="go">In progress</span>
         </div>
       </div>
     </section>
 
     <footer>
-      <span>Built as interaction references. Libraries vendored locally; see each lab's vendor/LICENSES.md.</span>
+      <span>Built as interaction references. The GSAP lab's libraries are vendored locally (gsap/vendor/LICENSES.md); the WebGL 1.0 lab uses no libraries.</span>
       <span>Sandbox Labs</span>
     </footer>
   </div>
